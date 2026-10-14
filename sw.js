@@ -16,7 +16,7 @@
    DevTools → Application → Cache Storage → busca 'dilson-fm-vXXX'
    ───────────────────────────────────────────────────────────────────────────  */
 
-const DEPLOY_VERSION = 'dilson-fm-v118';  /* ← SUBIR ESTE NÚMERO EN CADA DEPLOY */
+const DEPLOY_VERSION = 'dilson-fm-v119';  /* ← SUBIR ESTE NÚMERO EN CADA DEPLOY */
 const CACHE_VERSION  = DEPLOY_VERSION;
 
 /* Assets que se pre-cachean al instalar el SW.
