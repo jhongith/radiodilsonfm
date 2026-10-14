@@ -1,0 +1,1109 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" type="image/png" href="icon-192.png">
+<link rel="shortcut icon" href="icon-192.png">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Instala Radio Dilson 101.9 FM — Cuevo, Bolivia</title>
+<meta name="description" content="Escucha Radio Dilson 101.9 FM en vivo desde Cuevo, Bolivia. Pide tu canción, envía dedicatorias, entérate de las noticias. Gratis, sin publicidad.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://onlineradiodilson101cuevo.netlify.app/instalar">
+<meta property="og:title" content="📻 Radio Dilson 101.9 FM — Descarga la App Gratis">
+<meta property="og:description" content="Escúchanos en vivo, pide tu canción y entérate de todo lo que pasa en Cuevo. ¡Instala la app gratis!">
+<meta property="og:image" content="https://onlineradiodilson101cuevo.netlify.app/icon-512.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://onlineradiodilson101cuevo.netlify.app/icon-512.png">
+<link rel="canonical" href="https://onlineradiodilson101cuevo.netlify.app/instalar">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<link rel="manifest" href="/manifest.json">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+  --gold:#f5c842;--gold2:#ffe680;--gold3:rgba(245,200,66,.16);--gold4:rgba(245,200,66,.06);
+  --bg:#04030c;--bg2:#08071a;--bg3:#0e0c24;
+  --text:#f2eeff;--muted:rgba(242,238,255,.72);
+  --red:#ff2d55;--green:#00e5a0;--cyan:#00d4ff;
+  --border:rgba(245,200,66,.18);--border2:rgba(245,200,66,.08);
+}
+
+html,body{min-height:100vh;background:var(--bg);color:var(--text);
+  font-family:'Rajdhani',sans-serif;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+
+/* ═══════════════════════════════════════
+   SPLASH SCREEN
+═══════════════════════════════════════ */
+#splash{
+  position:fixed;inset:0;z-index:1000;background:var(--bg);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;
+}
+#splash.hidden{animation:splashOut .6s cubic-bezier(.4,0,.2,1) forwards}
+@keyframes splashOut{to{opacity:0;transform:scale(1.04);pointer-events:none}}
+
+.splash-logo-wrap{position:relative;width:100px;height:100px}
+.splash-ring{
+  position:absolute;border-radius:50%;border:1.5px solid rgba(245,200,66,.25);
+  top:50%;left:50%;transform:translate(-50%,-50%) scale(0);
+  animation:splashRing 2s ease-out infinite;
+}
+.splash-ring:nth-child(1){width:100px;height:100px;animation-delay:0s}
+.splash-ring:nth-child(2){width:160px;height:160px;animation-delay:.4s}
+.splash-ring:nth-child(3){width:220px;height:220px;animation-delay:.8s}
+@keyframes splashRing{
+  0%{transform:translate(-50%,-50%) scale(0);opacity:.8}
+  100%{transform:translate(-50%,-50%) scale(1);opacity:0}
+}
+.splash-img{
+  width:100px;height:100px;border-radius:50%;object-fit:cover;
+  border:2px solid rgba(245,200,66,.5);
+  box-shadow:0 0 40px rgba(245,200,66,.3);
+  position:relative;z-index:1;
+  animation:splashImgIn .8s cubic-bezier(.16,1,.3,1) .2s both;
+}
+@keyframes splashImgIn{from{opacity:0;transform:scale(.7)}to{opacity:1;transform:scale(1)}}
+
+.splash-title{
+  font-family:'Bebas Neue',sans-serif;font-size:2.4rem;letter-spacing:6px;
+  color:var(--gold);text-shadow:0 0 40px rgba(245,200,66,.5);
+  animation:splashImgIn .8s cubic-bezier(.16,1,.3,1) .4s both;
+}
+.splash-sub{
+  font-size:.75rem;letter-spacing:3px;color:var(--muted);text-transform:uppercase;
+  font-family:'Rajdhani',sans-serif;font-weight:600;
+  animation:splashImgIn .8s cubic-bezier(.16,1,.3,1) .55s both;
+}
+.splash-bar-wrap{
+  width:160px;height:3px;background:rgba(255,255,255,.07);border-radius:3px;overflow:hidden;
+  animation:splashImgIn .5s ease .7s both;
+}
+.splash-bar{height:100%;background:linear-gradient(90deg,var(--gold),var(--gold2));
+  border-radius:3px;animation:splashProgress 1.8s cubic-bezier(.4,0,.2,1) .8s forwards;width:0}
+@keyframes splashProgress{to{width:100%}}
+
+/* ═══════════════════════════════════════
+   BG EFFECTS
+═══════════════════════════════════════ */
+.bg-mesh{
+  position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(ellipse 90% 55% at 5% 95%,rgba(245,200,66,.1) 0%,transparent 55%),
+    radial-gradient(ellipse 60% 45% at 95% 5%,rgba(0,212,255,.07) 0%,transparent 55%),
+    radial-gradient(ellipse 70% 70% at 50% 50%,rgba(255,45,85,.04) 0%,transparent 65%);
+}
+.noise{
+  position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.035;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size:160px;
+}
+.grid-bg{
+  position:fixed;inset:0;z-index:0;pointer-events:none;
+  background-image:linear-gradient(rgba(245,200,66,.025) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(245,200,66,.025) 1px,transparent 1px);
+  background-size:48px 48px;
+  mask-image:radial-gradient(ellipse 80% 70% at 50% 50%,black 20%,transparent 100%);
+}
+/* Horizontal scan */
+.scan{
+  position:fixed;left:0;right:0;height:2px;z-index:1;pointer-events:none;
+  background:linear-gradient(90deg,transparent,rgba(245,200,66,.6),transparent);
+  animation:scanLine 11s linear infinite;
+}
+@keyframes scanLine{0%{top:-2px;opacity:0}4%{opacity:1}96%{opacity:.5}100%{top:100vh;opacity:0}}
+
+/* ═══════════════════════════════════════
+   LAYOUT
+═══════════════════════════════════════ */
+main{position:relative;z-index:2;max-width:460px;margin:0 auto;padding:0 18px 80px}
+
+/* ═══════════════════════════════════════
+   HEADER
+═══════════════════════════════════════ */
+.header{padding:34px 0 6px;text-align:center;animation:fadeUp .8s cubic-bezier(.16,1,.3,1) both}
+
+.live-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(255,45,85,.12);border:1px solid rgba(255,45,85,.4);
+  border-radius:999px;padding:5px 14px 5px 10px;
+  font-family:'Rajdhani',sans-serif;font-size:.68rem;font-weight:700;
+  letter-spacing:2.5px;color:#ff6680;text-transform:uppercase;margin-bottom:22px;
+}
+.live-dot{width:8px;height:8px;border-radius:50%;background:var(--red);
+  box-shadow:0 0 8px var(--red);animation:livePulse 1.3s ease infinite}
+@keyframes livePulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.6)}}
+
+
+
+.logo-wrap{position:relative;width:116px;height:116px;margin:0 auto 20px}
+.logo-halo{
+  position:absolute;inset:-20px;border-radius:50%;
+  background:radial-gradient(ellipse,rgba(245,200,66,.2) 0%,transparent 65%);
+  animation:haloPulse 3.5s ease infinite;
+}
+@keyframes haloPulse{0%,100%{opacity:.6;transform:scale(1)}50%{opacity:1;transform:scale(1.12)}}
+.logo-ring-a{position:absolute;inset:-14px;border-radius:50%;border:1.5px solid rgba(245,200,66,.2);animation:ringRot 16s linear infinite}
+.logo-ring-b{position:absolute;inset:-5px;border-radius:50%;border:1px dashed rgba(245,200,66,.3);animation:ringRot 10s linear infinite reverse}
+@keyframes ringRot{to{transform:rotate(360deg)}}
+.logo-img{
+  width:116px;height:116px;border-radius:50%;object-fit:cover;
+  border:2.5px solid rgba(245,200,66,.55);
+  box-shadow:0 0 0 7px rgba(245,200,66,.05),0 20px 60px rgba(245,200,66,.2);
+  position:relative;z-index:1;display:block;
+}
+
+.station-name{
+  font-family:'Bebas Neue',sans-serif;font-size:3rem;letter-spacing:5px;
+  color:var(--gold);text-shadow:0 0 60px rgba(245,200,66,.45),0 0 20px rgba(245,200,66,.2);
+  line-height:1;margin-bottom:8px;
+}
+.station-sub{
+  font-family:'Rajdhani',sans-serif;font-weight:600;
+  font-size:.78rem;letter-spacing:3px;color:var(--muted);
+  text-transform:uppercase;margin-bottom:28px;
+}
+
+/* ═══════════════════════════════════════
+   PLAYER CARD + WEB AUDIO VISUALIZER
+═══════════════════════════════════════ */
+.player-card{
+  background:linear-gradient(145deg,rgba(14,12,36,.98),rgba(6,5,16,.99));
+  border:1px solid rgba(245,200,66,.2);border-radius:28px;padding:20px;
+  margin-bottom:14px;position:relative;overflow:hidden;
+  animation:fadeUp .8s cubic-bezier(.16,1,.3,1) .12s both;
+  box-shadow:0 24px 70px rgba(0,0,0,.55),inset 0 1px 0 rgba(245,200,66,.1);
+}
+.player-card::before{
+  content:'';position:absolute;top:0;left:6%;right:6%;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(245,200,66,.55),transparent);
+}
+
+/* Canvas visualizer */
+#vizCanvas{
+  width:100%;height:60px;border-radius:12px;margin-bottom:14px;
+  background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.05);
+  display:block;
+}
+
+.now-playing{display:flex;align-items:center;gap:14px;margin-bottom:14px}
+.np-icon{
+  width:52px;height:52px;border-radius:16px;
+  background:linear-gradient(135deg,rgba(245,200,66,.15),rgba(245,200,66,.04));
+  border:1px solid rgba(245,200,66,.18);
+  display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0;
+  animation:npGlow 3.5s ease infinite;
+}
+@keyframes npGlow{0%,100%{box-shadow:0 0 0 0 rgba(245,200,66,.2)}50%{box-shadow:0 0 0 10px rgba(245,200,66,0)}}
+.np-info{flex:1;min-width:0}
+.np-label{font-size:.58rem;letter-spacing:2.5px;color:var(--gold);text-transform:uppercase;margin-bottom:3px;font-weight:700}
+.np-title{font-family:'Rajdhani',sans-serif;font-size:1.05rem;font-weight:700;color:var(--text);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.np-artist{font-size:.72rem;color:var(--muted);margin-top:2px}
+
+/* Volume + play row */
+.player-controls{display:flex;align-items:center;gap:10px}
+.vol-wrap{display:flex;align-items:center;gap:7px;flex:0 0 auto}
+.vol-icon{font-size:1rem;color:var(--muted)}
+.vol-slider{
+  -webkit-appearance:none;appearance:none;width:80px;height:4px;
+  background:rgba(255,255,255,.1);border-radius:4px;outline:none;cursor:pointer;
+}
+.vol-slider::-webkit-slider-thumb{
+  -webkit-appearance:none;width:14px;height:14px;border-radius:50%;
+  background:var(--gold);box-shadow:0 0 8px rgba(245,200,66,.5);cursor:pointer;
+}
+
+.play-btn{
+  flex:1;height:54px;border-radius:16px;border:none;
+  background:linear-gradient(135deg,#f5c842,#d4a020);color:#06050a;
+  font-family:'Bebas Neue',sans-serif;font-size:1.2rem;letter-spacing:4px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;gap:10px;
+  box-shadow:0 10px 35px rgba(245,200,66,.4);
+  transition:transform .15s,box-shadow .15s;position:relative;overflow:hidden;
+}
+.play-btn:hover{transform:translateY(-1px);box-shadow:0 14px 45px rgba(245,200,66,.55)}
+.play-btn:active{transform:scale(.97)}
+.play-btn.playing{background:linear-gradient(135deg,#ff2d55,#cc0033);color:#fff;box-shadow:0 10px 35px rgba(255,45,85,.4)}
+.play-btn-icon{font-size:1.4rem}
+#lp-audio{display:none}
+
+/* ═══════════════════════════════════════
+   STATS STRIP
+═══════════════════════════════════════ */
+.stats-strip{
+  display:flex;align-items:center;justify-content:space-around;
+  padding:16px 0;margin-bottom:14px;
+  border-top:1px solid rgba(255,255,255,.05);border-bottom:1px solid rgba(255,255,255,.05);
+  animation:fadeUp .8s cubic-bezier(.16,1,.3,1) .2s both;
+}
+.stat-item{text-align:center;flex:1}
+.stat-num{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2px;color:var(--gold);line-height:1}
+.stat-label{font-size:.55rem;color:var(--muted);text-transform:uppercase;letter-spacing:2px;font-weight:700}
+.stat-sep{width:1px;height:34px;background:rgba(255,255,255,.07)}
+
+/* ═══════════════════════════════════════
+   WEATHER CARD
+═══════════════════════════════════════ */
+.weather-card{
+  background:linear-gradient(135deg,rgba(0,212,255,.07),rgba(0,180,255,.02));
+  border:1px solid rgba(0,212,255,.2);border-radius:22px;padding:16px 18px;
+  margin-bottom:14px;
+  animation:fadeUp .8s cubic-bezier(.16,1,.3,1) .25s both;
+}
+.wx-top{display:flex;align-items:center;gap:14px;margin-bottom:12px}
+.wx-icon{font-size:2.4rem;flex-shrink:0;line-height:1}
+.wx-main{}
+.wx-label{font-size:.6rem;letter-spacing:2px;color:var(--cyan);text-transform:uppercase;font-weight:700;margin-bottom:2px}
+.wx-temp{font-family:'Bebas Neue',sans-serif;font-size:2rem;letter-spacing:3px;color:var(--text);line-height:1}
+.wx-temp span{font-size:1rem;color:var(--muted);letter-spacing:1px}
+.wx-desc{font-size:.75rem;color:var(--muted);margin-top:2px;font-weight:600}
+.wx-forecast{display:flex;gap:6px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none}
+.wx-forecast::-webkit-scrollbar{display:none}
+.wx-day{
+  flex:1;min-width:52px;text-align:center;
+  background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);
+  border-radius:12px;padding:8px 6px;
+}
+.wx-day-name{font-size:.58rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px;font-weight:700;margin-bottom:4px}
+.wx-day-icon{font-size:1.1rem;margin-bottom:4px}
+.wx-day-hi{font-family:'Share Tech Mono',monospace;font-size:.8rem;color:var(--gold)}
+.wx-day-rain{font-size:.58rem;color:var(--cyan);margin-top:2px}
+
+/* ═══════════════════════════════════════
+   INSTALL CARD
+═══════════════════════════════════════ */
+.install-card{
+  background:linear-gradient(145deg,rgba(245,200,66,.09),rgba(245,200,66,.02));
+  border:1.5px solid rgba(245,200,66,.35);border-radius:28px;padding:22px;
+  margin-bottom:14px;position:relative;overflow:hidden;
+  animation:fadeUp .8s cubic-bezier(.16,1,.3,1) .3s both;
+  box-shadow:0 20px 60px rgba(0,0,0,.4),inset 0 1px 0 rgba(245,200,66,.12);
+}
+.install-card::before{
+  content:'';position:absolute;top:0;left:5%;right:5%;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(245,200,66,.7),transparent);
+}
+.install-header{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.install-icon{
+  width:48px;height:48px;border-radius:14px;
+  background:linear-gradient(135deg,rgba(245,200,66,.2),rgba(245,200,66,.06));
+  border:1px solid rgba(245,200,66,.3);
+  display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0;
+}
+.install-title{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:3px;color:var(--gold);line-height:1}
+.install-title-sub{font-size:.62rem;color:var(--muted);letter-spacing:1px;text-transform:uppercase;font-weight:600}
+.install-sub{font-size:.77rem;color:var(--muted);margin-bottom:18px;line-height:1.6}
+
+.install-features{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:20px}
+.feat{
+  display:flex;align-items:center;gap:8px;font-size:.73rem;color:var(--text);font-weight:600;
+  background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);
+  border-radius:12px;padding:9px 11px;transition:border-color .2s,background .2s;
+}
+.feat:hover{border-color:rgba(245,200,66,.22);background:rgba(245,200,66,.04)}
+.feat-icon{font-size:1rem;flex-shrink:0}
+
+/* CTA BUTTON */
+.install-btn{
+  width:100%;height:60px;border-radius:18px;border:none;
+  background:linear-gradient(135deg,#f5c842 0%,#e0a810 50%,#f5d060 100%);
+  background-size:200% auto;color:#050408;
+  font-family:'Bebas Neue',sans-serif;font-size:1.3rem;letter-spacing:4px;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;
+  box-shadow:0 14px 45px rgba(245,200,66,.5),0 4px 14px rgba(245,200,66,.25),inset 0 1px 0 rgba(255,255,255,.3);
+  transition:transform .15s,box-shadow .15s,background-position .4s;
+  margin-bottom:12px;position:relative;overflow:hidden;
+  animation:ctaPulse 2.5s ease infinite;
+}
+@keyframes ctaPulse{
+  0%,100%{box-shadow:0 14px 45px rgba(245,200,66,.5),0 4px 14px rgba(245,200,66,.25)}
+  50%{box-shadow:0 18px 60px rgba(245,200,66,.7),0 6px 22px rgba(245,200,66,.4)}
+}
+.install-btn::before{
+  content:'';position:absolute;top:0;left:-100%;width:55%;height:100%;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.3),transparent);
+  animation:shimmer 3.5s ease infinite 1.5s;
+}
+@keyframes shimmer{0%{left:-100%}60%,100%{left:160%}}
+.install-btn:hover{transform:translateY(-2px);background-position:right center;box-shadow:0 20px 60px rgba(245,200,66,.7)}
+.install-btn:active{transform:scale(.97)}
+.install-btn:disabled{opacity:.6;cursor:default;animation:none}
+
+.free-label{text-align:center;font-size:.62rem;color:var(--green);letter-spacing:2px;font-weight:700;text-transform:uppercase}
+.free-label span{color:var(--muted)}
+
+/* Install instructions */
+.install-instructions{
+  background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);
+  border-radius:16px;padding:16px;font-size:.78rem;color:var(--muted);
+  line-height:1.6;display:none;margin-top:12px;
+}
+.install-instructions strong{color:var(--text)}
+.install-instructions.show{display:block;animation:fadeUp .35s ease both}
+.install-step{display:flex;align-items:flex-start;gap:12px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.05)}
+.install-step:last-child{border-bottom:none}
+.step-num{
+  width:24px;height:24px;border-radius:50%;
+  background:linear-gradient(135deg,rgba(245,200,66,.2),rgba(245,200,66,.05));
+  border:1px solid rgba(245,200,66,.3);
+  display:flex;align-items:center;justify-content:center;
+  font-size:.65rem;font-weight:700;color:var(--gold);flex-shrink:0;margin-top:1px;
+}
+
+/* ═══════════════════════════════════════
+   ANIMATED INSTALL GUIDE OVERLAY
+═══════════════════════════════════════ */
+#installOverlay{
+  position:fixed;inset:0;z-index:500;background:rgba(4,3,12,.95);
+  backdrop-filter:blur(8px);display:none;flex-direction:column;
+  align-items:center;justify-content:center;padding:24px;
+}
+#installOverlay.show{display:flex;animation:fadeUp .4s ease both}
+.overlay-close{
+  position:absolute;top:20px;right:20px;
+  background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);
+  border-radius:50%;width:38px;height:38px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;font-size:1.1rem;color:var(--muted);
+  font-family:inherit;padding:0;line-height:1;
+}
+.overlay-title{font-family:'Bebas Neue',sans-serif;font-size:2rem;letter-spacing:4px;color:var(--gold);text-align:center;margin-bottom:6px}
+.overlay-sub{font-size:.75rem;color:var(--muted);text-align:center;letter-spacing:1.5px;margin-bottom:28px;text-transform:uppercase;font-weight:600}
+
+/* Phone mockup */
+.phone-mockup{
+  width:220px;height:380px;border-radius:36px;
+  border:2.5px solid rgba(245,200,66,.4);
+  background:linear-gradient(160deg,#0e0c24,#060414);
+  position:relative;overflow:hidden;margin-bottom:28px;
+  box-shadow:0 30px 80px rgba(0,0,0,.7),0 0 0 1px rgba(245,200,66,.06);
+}
+.phone-mockup::before{
+  content:'';position:absolute;top:10px;left:50%;transform:translateX(-50%);
+  width:70px;height:5px;background:rgba(255,255,255,.12);border-radius:3px;
+}
+.phone-screen{padding:28px 14px 14px;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:8px}
+.phone-app-icon{
+  width:62px;height:62px;border-radius:16px;
+  background:linear-gradient(135deg,rgba(245,200,66,.25),rgba(245,200,66,.08));
+  border:1.5px solid rgba(245,200,66,.3);
+  display:flex;align-items:center;justify-content:center;font-size:1.8rem;
+  box-shadow:0 8px 24px rgba(245,200,66,.2);
+}
+.phone-app-name{font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:2px;color:var(--gold);margin-top:4px}
+.phone-app-sub{font-size:.6rem;color:var(--muted);letter-spacing:1px}
+
+/* Arrow pointer animation */
+.arrow-hint{
+  display:flex;flex-direction:column;align-items:center;gap:6px;
+  position:absolute;
+}
+.arrow-hint.bottom{bottom:14px;left:50%;transform:translateX(-50%)}
+.arrow-hint.share{bottom:30px;right:18px}
+.arrow-text{font-size:.62rem;color:var(--gold);letter-spacing:1.5px;font-weight:700;text-transform:uppercase;text-align:center}
+.arrow-anim{font-size:1.4rem;animation:arrowBounce 1.2s ease infinite}
+@keyframes arrowBounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+
+.overlay-steps{width:100%;max-width:320px}
+.ov-step{
+  display:flex;align-items:center;gap:14px;padding:10px 0;
+  border-bottom:1px solid rgba(255,255,255,.06);
+}
+.ov-step:last-child{border-bottom:none}
+.ov-num{
+  width:28px;height:28px;border-radius:50%;background:var(--gold);color:#06050a;
+  display:flex;align-items:center;justify-content:center;font-weight:900;font-size:.75rem;flex-shrink:0;
+}
+.ov-text{font-size:.82rem;color:var(--text);line-height:1.5}
+.ov-text strong{color:var(--gold)}
+
+/* ═══════════════════════════════════════
+   DEDICATORIAS CARD
+═══════════════════════════════════════ */
+.dedic-card{
+  background:linear-gradient(145deg,rgba(10,8,24,.97),rgba(6,5,16,.99));
+  border:1px solid rgba(255,255,255,.07);border-radius:24px;padding:18px;
+  margin-bottom:14px;
+  animation:fadeUp .8s cubic-bezier(.16,1,.3,1) .35s both;
+}
+.sec-label{
+  font-size:.6rem;letter-spacing:3px;color:var(--muted);text-transform:uppercase;font-weight:700;
+  display:flex;align-items:center;gap:10px;margin-bottom:14px;
+}
+.sec-label::before,.sec-label::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.08),transparent)}
+
+.dedic-feed{display:flex;flex-direction:column;gap:8px}
+.dedic-item{
+  display:flex;align-items:flex-start;gap:12px;padding:10px 12px;
+  background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.05);
+  border-radius:14px;animation:dedSlide .4s ease both;
+}
+@keyframes dedSlide{from{opacity:0;transform:translateX(-12px)}to{opacity:1;transform:none}}
+.dedic-avatar{
+  width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--gold3),rgba(255,255,255,.05));
+  border:1.5px solid rgba(245,200,66,.25);display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;
+}
+.dedic-body{flex:1;min-width:0}
+.dedic-from{font-size:.72rem;color:var(--gold);font-weight:700;margin-bottom:2px}
+.dedic-msg{font-size:.75rem;color:var(--muted);line-height:1.4;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dedic-song{font-size:.65rem;color:var(--cyan);margin-top:3px}
+.dedic-time{font-size:.6rem;color:rgba(255,255,255,.2);flex-shrink:0;align-self:flex-end;font-family:'Share Tech Mono',monospace}
+
+/* ═══════════════════════════════════════
+   FEATURES GRID
+═══════════════════════════════════════ */
+.features-section{animation:fadeUp .8s cubic-bezier(.16,1,.3,1) .4s both}
+.features-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.feature-card{
+  background:linear-gradient(145deg,rgba(12,10,28,.9),rgba(7,6,18,.95));
+  border:1px solid rgba(255,255,255,.06);border-radius:20px;padding:18px 15px;
+  transition:border-color .25s,transform .25s,box-shadow .25s;cursor:default;position:relative;overflow:hidden;
+}
+.feature-card:hover{border-color:rgba(245,200,66,.28);transform:translateY(-3px);box-shadow:0 14px 35px rgba(0,0,0,.4)}
+.fc-icon{font-size:1.55rem;margin-bottom:9px}
+.fc-title{font-family:'Rajdhani',sans-serif;font-size:.9rem;font-weight:700;color:var(--text);margin-bottom:4px;letter-spacing:.5px}
+.fc-desc{font-size:.66rem;color:var(--muted);line-height:1.45}
+
+/* ═══════════════════════════════════════
+   SHARE SECTION
+═══════════════════════════════════════ */
+.share-section{
+  margin-top:20px;
+  animation:fadeUp .8s cubic-bezier(.16,1,.3,1) .45s both;
+}
+.share-title{font-size:.62rem;letter-spacing:3px;color:var(--muted);text-transform:uppercase;font-weight:700;text-align:center;margin-bottom:14px}
+.share-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px}
+.share-btn{
+  display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 8px;
+  border-radius:16px;border:1px solid rgba(255,255,255,.07);cursor:pointer;
+  background:rgba(255,255,255,.03);transition:border-color .2s,transform .15s,background .2s;
+  text-decoration:none;font-family:inherit;font-size:inherit;color:inherit;
+}
+.share-btn:hover{transform:translateY(-2px);background:rgba(255,255,255,.06)}
+.share-btn-icon{font-size:1.5rem}
+.share-btn-label{font-size:.58rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px;font-weight:700}
+.share-btn.wa{border-color:rgba(37,211,102,.2)}
+.share-btn.wa:hover{border-color:rgba(37,211,102,.4);background:rgba(37,211,102,.06)}
+.share-btn.fb{border-color:rgba(66,103,178,.2)}
+.share-btn.fb:hover{border-color:rgba(66,103,178,.4);background:rgba(66,103,178,.06)}
+.share-btn.tw{border-color:rgba(29,161,242,.2)}
+.share-btn.tw:hover{border-color:rgba(29,161,242,.4);background:rgba(29,161,242,.06)}
+.share-btn.copy{border-color:rgba(245,200,66,.2)}
+.share-btn.copy:hover{border-color:rgba(245,200,66,.4);background:rgba(245,200,66,.06)}
+
+/* QR section */
+.qr-wrap{
+  display:flex;align-items:center;gap:14px;
+  padding:14px;background:rgba(255,255,255,.03);
+  border:1px solid rgba(255,255,255,.07);border-radius:18px;
+}
+#qrCanvas{border-radius:8px;flex-shrink:0}
+.qr-info{}
+.qr-title{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:.92rem;color:var(--text);margin-bottom:4px}
+.qr-sub{font-size:.68rem;color:var(--muted);line-height:1.5}
+
+/* Footer */
+.footer-txt{font-size:.62rem;color:var(--muted);text-align:center;margin-top:22px;line-height:1.8}
+.footer-txt a{color:var(--gold);text-decoration:none}
+
+/* ═══════════════════════════════════════
+   ANIMS + UTILS
+═══════════════════════════════════════ */
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
+
+.lp-toast{
+  position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(20px);
+  background:rgba(14,12,28,.97);border:1px solid rgba(245,200,66,.22);
+  border-radius:16px;padding:13px 22px;font-size:.83rem;color:var(--text);
+  z-index:999;opacity:0;transition:opacity .3s,transform .3s;
+  white-space:nowrap;pointer-events:none;
+  box-shadow:0 10px 40px rgba(0,0,0,.6);
+}
+.lp-toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+@media(max-width:380px){
+  .station-name{font-size:2.5rem}
+  .share-grid{grid-template-columns:repeat(4,1fr);gap:8px}
+}
+</style>
+</head>
+<body>
+
+<!-- ═══ SPLASH ═══ -->
+<div id="splash">
+  <div class="splash-logo-wrap">
+    <div class="splash-ring"></div><div class="splash-ring"></div><div class="splash-ring"></div>
+    <img class="splash-img" src="icon.png" alt="Radio Dilson"
+      onerror="this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMDAgMjAwIj48ZGVmcz48cmFkaWFsR3JhZGllbnQgaWQ9ImJnIiBjeD0iNTAlIiBjeT0iNTAlIiByPSI1MCUiPjxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiMxYTEyMDAiLz48c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMwNTA0MDAiLz48L3JhZGlhbEdyYWRpZW50PjwvZGVmcz48Y2lyY2xlIGN4PSIxMDAiIGN5PSIxMDAiIHI9Ijk4IiBmaWxsPSJ1cmwoI2JnKSIgc3Ryb2tlPSIjZjVjODQyIiBzdHJva2Utd2lkdGg9IjEuNSIvPjxwYXRoIGQ9Ik01OCA2OEE1NSA1NSAwIDAgMSAxNDIgNjgiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2Y1Yzg0MiIgc3Ryb2tlLXdpZHRoPSIzLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPjxwYXRoIGQ9Ik03MCA4MEEzOCAzOCAwIDAgMSAxMzAgODAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2Y1Yzg0MiIgc3Ryb2tlLXdpZHRoPSIzIiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48cGF0aCBkPSJNODIgOTJBMjIgMjIgMCAwIDEgMTE4IDkyIiBmaWxsPSJub25lIiBzdHJva2U9IiNmNWM4NDIiIHN0cm9rZS13aWR0aD0iMi41IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48bGluZSB4MT0iMTAwIiB5MT0iOTgiIHgyPSIxMDAiIHkyPSIxNDgiIHN0cm9rZT0iI2Y1Yzg0MiIgc3Ryb2tlLXdpZHRoPSIzIiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48bGluZSB4MT0iODIiIHkxPSIxNDgiIHgyPSIxMTgiIHkyPSIxNDgiIHN0cm9rZT0iI2Y1Yzg0MiIgc3Ryb2tlLXdpZHRoPSIzIiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48Y2lyY2xlIGN4PSIxMDAiIGN5PSI5NiIgcj0iNCIgZmlsbD0iI2Y1Yzg0MiIvPjx0ZXh0IHg9IjEwMCIgeT0iMTgwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwgQmxhY2siIGZvbnQtc2l6ZT0iMTMiIGZvbnQtd2VpZ2h0PSI5MDAiIGZpbGw9IiNmNWM4NDIiIGxldHRlci1zcGFjaW5nPSIyIj4xMDEuOSBGTTwvdGV4dD48L3N2Zz4=';this.onerror=null">
+  </div>
+  <div class="splash-title">RADIO DILSON</div>
+  <div class="splash-sub">101.9 FM · Cuevo, Bolivia</div>
+  <div class="splash-bar-wrap"><div class="splash-bar"></div></div>
+</div>
+
+<!-- ═══ INSTALL GUIDE OVERLAY ═══ -->
+<div id="installOverlay" role="dialog" aria-modal="true" aria-label="Cómo instalar Radio Dilson 101.9 FM">
+  <button type="button" class="overlay-close" aria-label="Cerrar" onclick="closeOverlay()">✕</button>
+  <div class="overlay-title">INSTALAR APP</div>
+  <div class="overlay-sub" id="overlaySubtitle">Sigue estos pasos</div>
+  <div class="phone-mockup">
+    <div class="phone-screen">
+      <div class="phone-app-icon">
+        <img src="icon.png" alt="Radio Dilson FM" style="width:100%;height:100%;object-fit:cover;border-radius:inherit;">
+    </div>
+      <div class="phone-app-name">DILSON FM</div>
+      <div class="phone-app-sub">101.9 · Cuevo</div>
+    </div>
+    <div class="arrow-hint share" id="arrowShare" style="display:none">
+      <div class="arrow-text">Toca aquí</div>
+      <div class="arrow-anim">⬆️</div>
+    </div>
+    <div class="arrow-hint bottom" id="arrowMenu" style="display:none">
+      <div class="arrow-anim">⬇️</div>
+      <div class="arrow-text">Menú ⋮</div>
+    </div>
+  </div>
+  <div class="overlay-steps" id="overlaySteps"></div>
+</div>
+
+<!-- ═══ BACKGROUND ═══ -->
+<div class="bg-mesh"></div>
+<div class="noise"></div>
+<div class="grid-bg"></div>
+<div class="scan"></div>
+<audio id="lp-audio" preload="none"></audio>
+
+<main>
+
+  <!-- HEADER -->
+  <div class="header">
+    <div style="display:flex;align-items:center;justify-content:center;margin-bottom:22px">
+      <div class="live-badge"><span class="live-dot"></span>En vivo · Cuevo, Bolivia 🇧🇴</div>
+    </div>
+    <div class="logo-wrap">
+      <div class="logo-halo"></div>
+      <div class="logo-ring-a"></div>
+      <div class="logo-ring-b"></div>
+      <img class="logo-img" src="icon.png" alt="Radio Dilson 101.9 FM"
+        onerror="this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMDAgMjAwIj48ZGVmcz48cmFkaWFsR3JhZGllbnQgaWQ9ImJnIiBjeD0iNTAlIiBjeT0iNTAlIiByPSI1MCUiPjxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiMxYTEyMDAiLz48c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMwNTA0MDAiLz48L3JhZGlhbEdyYWRpZW50PjwvZGVmcz48Y2lyY2xlIGN4PSIxMDAiIGN5PSIxMDAiIHI9Ijk4IiBmaWxsPSJ1cmwoI2JnKSIgc3Ryb2tlPSIjZjVjODQyIiBzdHJva2Utd2lkdGg9IjEuNSIvPjxwYXRoIGQ9Ik01OCA2OEE1NSA1NSAwIDAgMSAxNDIgNjgiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2Y1Yzg0MiIgc3Ryb2tlLXdpZHRoPSIzLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPjxwYXRoIGQ9Ik03MCA4MEEzOCAzOCAwIDAgMSAxMzAgODAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2Y1Yzg0MiIgc3Ryb2tlLXdpZHRoPSIzIiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48cGF0aCBkPSJNODIgOTJBMjIgMjIgMCAwIDEgMTE4IDkyIiBmaWxsPSJub25lIiBzdHJva2U9IiNmNWM4NDIiIHN0cm9rZS13aWR0aD0iMi41IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48bGluZSB4MT0iMTAwIiB5MT0iOTgiIHgyPSIxMDAiIHkyPSIxNDgiIHN0cm9rZT0iI2Y1Yzg0MiIgc3Ryb2tlLXdpZHRoPSIzIiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48bGluZSB4MT0iODIiIHkxPSIxNDgiIHgyPSIxMTgiIHkyPSIxNDgiIHN0cm9rZT0iI2Y1Yzg0MiIgc3Ryb2tlLXdpZHRoPSIzIiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48Y2lyY2xlIGN4PSIxMDAiIGN5PSI5NiIgcj0iNCIgZmlsbD0iI2Y1Yzg0MiIvPjx0ZXh0IHg9IjEwMCIgeT0iMTgwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwgQmxhY2siIGZvbnQtc2l6ZT0iMTMiIGZvbnQtd2VpZ2h0PSI5MDAiIGZpbGw9IiNmNWM4NDIiIGxldHRlci1zcGFjaW5nPSIyIj4xMDEuOSBGTTwvdGV4dD48L3N2Zz4=';this.onerror=null">
+    </div>
+    <div class="station-name">Radio DILSON 101.9 FM</div>
+    <div class="station-sub">📍 Cuevo · Santa Cruz · Bolivia</div>
+  </div>
+
+  <!-- WEATHER -->
+  <div class="weather-card">
+    <div class="wx-top">
+      <div class="wx-icon" id="wxIcon">⛅</div>
+      <div class="wx-main">
+        <div class="wx-label">🌡️ Clima en Cuevo ahora</div>
+        <div class="wx-temp" id="wxTemp"><span style="font-size:1rem;color:var(--muted)">cargando...</span></div>
+        <div class="wx-desc" id="wxDesc">Obteniendo datos...</div>
+      </div>
+    </div>
+    <div class="wx-forecast" id="wxForecast"></div>
+  </div>
+
+  <!-- PLAYER CARD -->
+  <div class="player-card">
+    <canvas id="vizCanvas"></canvas>
+    <div class="now-playing">
+      <div class="np-icon" id="lpNpIcon">🎙️</div>
+      <div class="np-info">
+        <div class="np-label">● Ahora en el aire</div>
+        <div class="np-title" id="lpSongTitle">Radio Dilson 101.9 FM</div>
+        <div class="np-artist" id="lpSongArtist">En Vivo · Cuevo, Bolivia</div>
+      </div>
+    </div>
+    <div class="player-controls">
+      <div class="vol-wrap">
+        <span class="vol-icon">🔈</span>
+        <input type="range" class="vol-slider" id="volSlider" min="0" max="1" step="0.05" value="1">
+      </div>
+      <button class="play-btn" id="lpPlayBtn" onclick="lpToggle()">
+        <span class="play-btn-icon" id="lpPlayIcon">▶</span>
+        <span id="lpPlayText">ESCUCHAR EN VIVO</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- STATS -->
+  <div class="stats-strip">
+    <div class="stat-item"><div class="stat-num">24/7</div><div class="stat-label">En el aire</div></div>
+    <div class="stat-sep"></div>
+    <div class="stat-item"><div class="stat-num">100%</div><div class="stat-label">Gratis</div></div>
+    <div class="stat-sep"></div>
+    <div class="stat-item"><div class="stat-num">101.9</div><div class="stat-label">FM Cuevo</div></div>
+    <div class="stat-sep"></div>
+    <div class="stat-item"><div class="stat-num">★ 4.9</div><div class="stat-label">Valoración</div></div>
+  </div>
+
+  <!-- INSTALL CARD -->
+  <div class="install-card">
+    <div class="install-header">
+      <div class="install-icon">📲</div>
+      <div>
+        <div class="install-title">Instala la App</div>
+        <div class="install-title-sub">Gratis · Sin publicidad · Un toque</div>
+      </div>
+    </div>
+    <div class="install-sub">Escucha sin abrir el navegador, recibe notificaciones y accede directamente desde tu pantalla de inicio.</div>
+    <div class="install-features">
+      <div class="feat"><span class="feat-icon">📶</span> Funciona offline</div>
+      <div class="feat"><span class="feat-icon">🔔</span> Notificaciones</div>
+      <div class="feat"><span class="feat-icon">🎵</span> Pide canciones</div>
+      <div class="feat"><span class="feat-icon">💌</span> Dedicatorias</div>
+      <div class="feat"><span class="feat-icon">📰</span> Noticias Cuevo</div>
+      <div class="feat"><span class="feat-icon">🛒</span> Mercado local</div>
+    </div>
+    <button class="install-btn" id="lpInstallBtn" onclick="lpInstall()">
+      <span>📲</span> INSTALAR AHORA — ES GRATIS
+    </button>
+    <div class="free-label">✓ Sin costo <span>·</span> ✓ Sin registro <span>·</span> ✓ Instantáneo</div>
+    <div class="install-instructions" id="lpInstructions"></div>
+  </div>
+
+  <!-- DEDICATORIAS -->
+  <div class="dedic-card">
+    <div class="sec-label">Dedicatorias recientes</div>
+    <div class="dedic-feed" id="dedicFeed">
+      <!-- populated by JS -->
+    </div>
+  </div>
+
+  <!-- FEATURES -->
+  <div class="features-section">
+    <div class="sec-label" style="margin-top:8px">¿Qué puedes hacer?</div>
+    <div class="features-grid">
+      <div class="feature-card"><div class="fc-icon">🎵</div><div class="fc-title">Pide tu canción</div><div class="fc-desc">Solicita tu tema favorito y el locutor lo pone al aire</div></div>
+      <div class="feature-card"><div class="fc-icon">💌</div><div class="fc-title">Dedicatorias</div><div class="fc-desc">Manda saludos a tus seres queridos en vivo</div></div>
+      <div class="feature-card"><div class="fc-icon">📰</div><div class="fc-title">Noticias locales</div><div class="fc-desc">Todo lo que pasa en Cuevo y la región</div></div>
+      <div class="feature-card"><div class="fc-icon">🛒</div><div class="fc-title">Mercado Cuevo</div><div class="fc-desc">Compra, vende y alquila en tu comunidad</div></div>
+      <div class="feature-card"><div class="fc-icon">🗳️</div><div class="fc-title">Votaciones en vivo</div><div class="fc-desc">Participa en encuestas mientras escuchas</div></div>
+      <div class="feature-card"><div class="fc-icon">🎮</div><div class="fc-title">Arcade Dilson</div><div class="fc-desc">¡Juega mientras escuchas la radio!</div></div>
+    </div>
+  </div>
+
+  <!-- SHARE SECTION -->
+  <div class="share-section">
+    <div class="share-title">Comparte con tus amigos</div>
+    <div class="share-grid">
+      <button type="button" class="share-btn wa" onclick="shareWA()">
+        <span class="share-btn-icon">💬</span>
+        <span class="share-btn-label">WhatsApp</span>
+      </button>
+      <button type="button" class="share-btn fb" onclick="shareFB()">
+        <span class="share-btn-icon">📘</span>
+        <span class="share-btn-label">Facebook</span>
+      </button>
+      <button type="button" class="share-btn tw" onclick="shareTW()">
+        <span class="share-btn-icon">🐦</span>
+        <span class="share-btn-label">Twitter</span>
+      </button>
+      <button type="button" class="share-btn copy" onclick="copyLink()">
+        <span class="share-btn-icon">🔗</span>
+        <span class="share-btn-label">Copiar</span>
+      </button>
+    </div>
+    <!-- QR Code -->
+    <div class="qr-wrap">
+      <div id="qrCode" style="flex-shrink:0;border-radius:10px;overflow:hidden;width:80px;height:80px;background:#fff;display:flex;align-items:center;justify-content:center"></div>
+      <div class="qr-info">
+        <div class="qr-title">📱 Escanea el código QR</div>
+        <div class="qr-sub">Comparte en grupos de WhatsApp, redes sociales o imprímelo para que todos puedan instalar Radio Dilson.</div>
+        <button onclick="downloadQR()" style="margin-top:8px;background:rgba(245,200,66,.12);border:1px solid rgba(245,200,66,.3);border-radius:8px;padding:5px 12px;color:var(--gold);font-family:'Rajdhani',sans-serif;font-weight:700;font-size:.7rem;letter-spacing:1.5px;cursor:pointer;text-transform:uppercase">⬇ Descargar QR</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-txt">
+    ¿Ya tienes la app? <a href="https://onlineradiodilson101cuevo.netlify.app/">Abre Radio Dilson FM →</a><br>
+    Dilson 101.9 FM · Cuevo, Santa Cruz, Bolivia · 24/7
+  </div>
+
+</main>
+
+<div class="lp-toast" id="lpToast"></div>
+
+<script>
+/* ═══════════════════════════════════════
+   SPLASH
+═══════════════════════════════════════ */
+window.addEventListener('load', () => {
+  if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone) {
+    setTimeout(() => { window.location.href = '/'; }, 400);
+    return;
+  }
+  setTimeout(() => {
+    const s = document.getElementById('splash');
+    s.classList.add('hidden');
+    setTimeout(() => { s.style.display = 'none'; }, 650);
+  }, 2800);
+  initDedicatorias();
+  initWeather();
+  initQR();
+});
+
+/* ═══════════════════════════════════════
+   DEDICATED LISTENER STATS — removed
+═══════════════════════════════════════ */
+
+/* ═══════════════════════════════════════
+   CLIMA — Open-Meteo (gratis, sin clave)
+   Cuevo, Bolivia: lat=-20.467, lon=-63.533
+═══════════════════════════════════════ */
+const WX_ICONS = {
+  0:'☀️',1:'🌤️',2:'⛅',3:'☁️',
+  45:'🌫️',48:'🌫️',
+  51:'🌦️',53:'🌦️',55:'🌧️',
+  61:'🌧️',63:'🌧️',65:'🌧️',
+  71:'🌨️',73:'🌨️',75:'❄️',
+  80:'🌦️',81:'🌧️',82:'⛈️',
+  95:'⛈️',96:'⛈️',99:'⛈️'
+};
+const WX_DESC = {
+  0:'Despejado',1:'Mayormente despejado',2:'Parcialmente nublado',3:'Nublado',
+  45:'Neblina',48:'Neblina',
+  51:'Llovizna leve',53:'Llovizna',55:'Llovizna intensa',
+  61:'Lluvia leve',63:'Lluvia',65:'Lluvia intensa',
+  80:'Chubascos',81:'Chubascos fuertes',82:'Chubascos muy fuertes',
+  95:'Tormenta',96:'Tormenta con granizo',99:'Tormenta fuerte'
+};
+const DAYS_ES = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
+
+async function initWeather() {
+  try {
+    const url = 'https://api.open-meteo.com/v1/forecast?latitude=-20.467&longitude=-63.533' +
+      '&current=temperature_2m,weathercode&daily=weathercode,temperature_2m_max,precipitation_probability_max' +
+      '&timezone=America%2FLa_Paz&forecast_days=5';
+    const res  = await fetch(url);
+    const data = await res.json();
+    const cur  = data.current;
+    const day  = data.daily;
+    const code = cur.weathercode;
+    const temp = Math.round(cur.temperature_2m);
+
+    document.getElementById('wxIcon').textContent = WX_ICONS[code] || '🌡️';
+    document.getElementById('wxTemp').innerHTML   = `${temp}<span>°C</span>`;
+    document.getElementById('wxDesc').textContent = WX_DESC[code] || 'Cuevo, Bolivia';
+
+    const fcast = document.getElementById('wxForecast');
+    fcast.innerHTML = '';
+    day.time.forEach((t, i) => {
+      const d   = new Date(t + 'T12:00:00');
+      const nom = DAYS_ES[d.getDay()];
+      const ico = WX_ICONS[day.weathercode[i]] || '🌡️';
+      const hi  = Math.round(day.temperature_2m_max[i]);
+      const rn  = day.precipitation_probability_max[i];
+      fcast.innerHTML += `
+        <div class="wx-day">
+          <div class="wx-day-name">${nom}</div>
+          <div class="wx-day-icon">${ico}</div>
+          <div class="wx-day-hi">${hi}°</div>
+          <div class="wx-day-rain">${rn}%💧</div>
+        </div>`;
+    });
+  } catch(e) {
+    document.getElementById('wxTemp').innerHTML = '<span>—°C</span>';
+    document.getElementById('wxDesc').textContent = 'Sin conexión';
+  }
+}
+
+/* ═══════════════════════════════════════
+   DEDICATORIAS — sin datos de ejemplo
+   (antes había dedicatorias inventadas mostradas como reales)
+═══════════════════════════════════════ */
+function initDedicatorias() {
+  const feed = document.getElementById('dedicFeed');
+  if (!feed || feed.children.length) return;
+  feed.innerHTML = '<div class="dedic-item"><div class="dedic-body"><div class="dedic-msg">Sé el primero en enviar tu dedicatoria 💌</div></div></div>';
+}
+
+/* ═══════════════════════════════════════
+   AUDIO PLAYER + WEB AUDIO VISUALIZER
+═══════════════════════════════════════ */
+const lpAudio    = document.getElementById('lp-audio');
+const lpPlayBtn  = document.getElementById('lpPlayBtn');
+const lpPlayIcon = document.getElementById('lpPlayIcon');
+const lpPlayText = document.getElementById('lpPlayText');
+const volSlider  = document.getElementById('volSlider');
+let lpPlaying    = false;
+let audioCtx, analyser, source, animFrame;
+
+lpAudio.src = 'radio-stream';
+volSlider.addEventListener('input', () => { lpAudio.volume = volSlider.value; });
+
+function lpToggle() {
+  if (lpPlaying) {
+    lpAudio.pause(); lpAudio.src = '';
+    lpPlaying = false;
+    lpPlayBtn.classList.remove('playing');
+    lpPlayIcon.textContent = '▶';
+    lpPlayText.textContent = 'ESCUCHAR EN VIVO';
+    cancelAnimationFrame(animFrame);
+    drawIdleViz();
+  } else {
+    lpShowToast('📡 Conectando a Dilson 101.9 FM...');
+    lpAudio.src = 'radio-stream';
+    lpAudio.load();
+    lpAudio.play()
+      .then(() => {
+        lpPlaying = true;
+        lpPlayBtn.classList.add('playing');
+        lpPlayIcon.textContent = '⏸';
+        lpPlayText.textContent = 'PAUSAR';
+        setupAudioViz();
+        lpFetchStatus();
+      })
+      .catch(() => {
+        lpShowToast('⚠️ No se pudo conectar. Verifica tu internet.');
+        drawIdleViz(); // show animated idle viz
+      });
+  }
+}
+
+function setupAudioViz() {
+  try {
+    if (!audioCtx) {
+      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      source   = audioCtx.createMediaElementSource(lpAudio);
+      analyser = audioCtx.createAnalyser();
+      analyser.fftSize = 128;
+      source.connect(analyser);
+      analyser.connect(audioCtx.destination);
+    }
+    drawLiveViz();
+  } catch(e) { drawIdleViz(); }
+}
+
+function drawLiveViz() {
+  const canvas = document.getElementById('vizCanvas');
+  const ctx    = canvas.getContext('2d');
+  const W = canvas.offsetWidth; const H = canvas.offsetHeight;
+  canvas.width = W * devicePixelRatio; canvas.height = H * devicePixelRatio;
+  ctx.scale(devicePixelRatio, devicePixelRatio);
+  const bufLen = analyser.frequencyBinCount;
+  const dataArr = new Uint8Array(bufLen);
+
+  function draw() {
+    animFrame = requestAnimationFrame(draw);
+    analyser.getByteFrequencyData(dataArr);
+    ctx.clearRect(0,0,W,H);
+    const barW = (W / bufLen) * 2.2;
+    let x = 0;
+    for (let i = 0; i < bufLen; i++) {
+      const barH = (dataArr[i] / 255) * H;
+      const hue = 42 + (i / bufLen) * 20;
+      ctx.fillStyle = `hsla(${hue},95%,60%,0.85)`;
+      ctx.beginPath();
+      ctx.roundRect(x, H - barH, barW - 1, barH, 2);
+      ctx.fill();
+      x += barW + 1;
+    }
+  }
+  draw();
+}
+
+/* Animated idle visualizer (CSS-like fake) */
+function drawIdleViz() {
+  const canvas = document.getElementById('vizCanvas');
+  const ctx    = canvas.getContext('2d');
+  const W = canvas.offsetWidth; const H = canvas.offsetHeight;
+  canvas.width = W * devicePixelRatio; canvas.height = H * devicePixelRatio;
+  ctx.scale(devicePixelRatio, devicePixelRatio);
+  const bars = 40; let t = 0;
+  function draw() {
+    if (lpPlaying) return;
+    animFrame = requestAnimationFrame(draw);
+    ctx.clearRect(0,0,W,H);
+    t += 0.04;
+    const barW = W / bars;
+    for (let i = 0; i < bars; i++) {
+      const amp = 0.08 + 0.08 * Math.sin(t + i * 0.4) + 0.04 * Math.sin(t * 1.7 + i * 0.7);
+      const barH = amp * H;
+      ctx.fillStyle = `rgba(245,200,66,${0.15 + amp * 1.5})`;
+      ctx.beginPath();
+      ctx.roundRect(i * barW + 1, H - barH, barW - 2, barH, 2);
+      ctx.fill();
+    }
+  }
+  draw();
+}
+drawIdleViz();
+
+async function lpFetchStatus() {
+  try {
+    const r = await fetch('/api/radio-status', { cache:'no-store', signal:AbortSignal.timeout(6000) });
+    const d = await r.json();
+    if (d.ok && d.title) {
+      document.getElementById('lpSongTitle').textContent  = d.song   || d.title;
+      document.getElementById('lpSongArtist').textContent = d.artist || 'Dilson 101.9 FM';
+    }
+  } catch(e) {}
+  if (lpPlaying) setTimeout(lpFetchStatus, 20000);
+}
+
+/* ═══════════════════════════════════════
+   PWA INSTALL
+═══════════════════════════════════════ */
+let lpDeferred = null;
+window.addEventListener('beforeinstallprompt', e => {
+  e.preventDefault(); lpDeferred = e;
+  const btn = document.getElementById('lpInstallBtn');
+  if (btn) btn.style.animationDuration = '1.2s';
+});
+
+async function lpInstall() {
+  const btn = document.getElementById('lpInstallBtn');
+
+  if (lpDeferred) {
+    btn.disabled = true;
+    btn.innerHTML = '<span>⏳</span> INSTALANDO...';
+    lpDeferred.prompt();
+    const { outcome } = await lpDeferred.userChoice;
+    if (outcome === 'accepted') {
+      lpShowToast('🎉 ¡App instalada! Búscala en tu pantalla de inicio');
+      btn.innerHTML = '<span>✅</span> ¡INSTALADA!';
+      btn.style.background = 'linear-gradient(135deg,#00e5a0,#00b87a)';
+    } else {
+      btn.disabled = false;
+      btn.innerHTML = '<span>📲</span> INSTALAR AHORA — ES GRATIS';
+    }
+    lpDeferred = null;
+    return;
+  }
+
+  const ua = navigator.userAgent || '';
+  // iPadOS moderno se reporta como "Macintosh": lo distinguimos por los puntos táctiles
+  const isIPad       = /Macintosh/i.test(ua) && navigator.maxTouchPoints > 1;
+  const isIOS        = /iphone|ipad|ipod/i.test(ua) || isIPad;
+  const isAndroid    = /android/i.test(ua);
+  // Navegadores internos (WhatsApp, Instagram, Facebook…): no permiten instalar la PWA
+  const isInApp      = /(FBAN|FBAV|Instagram|WhatsApp|Line|Twitter)/i.test(ua);
+  const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+
+  if (isStandalone) { lpShowToast('✅ La app ya está instalada'); btn.innerHTML = '<span>✅</span> YA INSTALADA'; return; }
+
+  showInstallOverlay(isIOS, isAndroid, isInApp);
+}
+
+function showInstallOverlay(isIOS, isAndroid, isInApp) {
+  const overlay = document.getElementById('installOverlay');
+  const sub     = document.getElementById('overlaySubtitle');
+  const steps   = document.getElementById('overlaySteps');
+  const arrowShare = document.getElementById('arrowShare');
+  const arrowMenu  = document.getElementById('arrowMenu');
+
+  arrowShare.style.display = 'none'; arrowMenu.style.display = 'none';
+
+  if (isInApp) {
+    sub.textContent = 'Abre este enlace en Chrome o Safari';
+    steps.innerHTML = `
+      <div class="ov-step"><div class="ov-num">!</div><div class="ov-text">Estás en el navegador interno de una app (WhatsApp, Instagram o Facebook) y <strong>desde ahí no se puede instalar</strong>.</div></div>
+      <div class="ov-step"><div class="ov-num">1</div><div class="ov-text">Toca el menú <strong>⋮</strong> o <strong>···</strong> y elige <strong>"Abrir en Chrome"</strong> / <strong>"Abrir en Safari"</strong>.</div></div>
+      <div class="ov-step"><div class="ov-num">2</div><div class="ov-text">Ya en Chrome o Safari, vuelve a pulsar <strong>"Instalar ahora"</strong> y sigue los pasos. ¡Listo! 🎉</div></div>`;
+  } else if (isIOS) {
+    sub.textContent = 'iPhone / iPad — Safari';
+    arrowShare.style.display = 'flex';
+    steps.innerHTML = `
+      <div class="ov-step"><div class="ov-num">1</div><div class="ov-text">Abre este link en <strong>Safari</strong> (no Chrome)</div></div>
+      <div class="ov-step"><div class="ov-num">2</div><div class="ov-text">Toca el ícono <strong>⬆️ Compartir</strong> en la barra inferior</div></div>
+      <div class="ov-step"><div class="ov-num">3</div><div class="ov-text">Toca <strong>"Añadir a pantalla de inicio"</strong></div></div>
+      <div class="ov-step"><div class="ov-num">4</div><div class="ov-text">Toca <strong>"Añadir"</strong> — ¡Listo! 🎉</div></div>`;
+  } else if (isAndroid) {
+    sub.textContent = 'Android — Chrome';
+    arrowMenu.style.display = 'flex';
+    steps.innerHTML = `
+      <div class="ov-step"><div class="ov-num">1</div><div class="ov-text">Toca el menú <strong>⋮</strong> en la esquina superior derecha</div></div>
+      <div class="ov-step"><div class="ov-num">2</div><div class="ov-text">Selecciona <strong>"Instalar aplicación"</strong></div></div>
+      <div class="ov-step"><div class="ov-num">3</div><div class="ov-text">Toca <strong>"Instalar"</strong> — ¡Listo! 🎉</div></div>`;
+  } else {
+    sub.textContent = 'PC / Mac — Chrome';
+    steps.innerHTML = `
+      <div class="ov-step"><div class="ov-num">1</div><div class="ov-text">Busca el ícono <strong>⊕</strong> al final de la barra de direcciones</div></div>
+      <div class="ov-step"><div class="ov-num">2</div><div class="ov-text">Haz clic en <strong>"Instalar Radio Dilson FM"</strong> — ¡Listo! 🎉</div></div>`;
+  }
+  overlay.classList.add('show');
+}
+function closeOverlay() {
+  const o = document.getElementById('installOverlay');
+  o.style.animation = 'splashOut .3s ease forwards';
+  setTimeout(() => { o.classList.remove('show'); o.style.animation = ''; }, 320);
+}
+
+/* Cerrar el diálogo de instalación con la tecla Escape */
+document.addEventListener('keydown', e => {
+  if (e.key !== 'Escape' && e.key !== 'Esc') return;
+  const o = document.getElementById('installOverlay');
+  if (o && o.classList.contains('show')) closeOverlay();
+});
+
+window.addEventListener('appinstalled', () => {
+  lpShowToast('🎉 ¡Radio Dilson FM instalada!');
+  const btn = document.getElementById('lpInstallBtn');
+  if (btn) { btn.innerHTML = '<span>✅</span> ¡INSTALADA!'; btn.style.background = 'linear-gradient(135deg,#00e5a0,#00b87a)'; btn.disabled = true; }
+  closeOverlay();
+});
+
+/* ═══════════════════════════════════════
+   SHARE BUTTONS
+═══════════════════════════════════════ */
+const SHARE_URL  = 'https://onlineradiodilson101cuevo.netlify.app/instalar';
+const SHARE_TEXT = '📻 Escucha Radio Dilson 101.9 FM en vivo desde Cuevo, Bolivia 🇧🇴\n🎵 Pide canciones, manda dedicatorias y entérate de todo.\n📲 Instala gratis: ' + SHARE_URL;
+
+function shareWA() { window.open('https://wa.me/?text=' + encodeURIComponent(SHARE_TEXT), '_blank'); }
+function shareFB() { window.open('https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(SHARE_URL), '_blank'); }
+function shareTW() { window.open('https://twitter.com/intent/tweet?text=' + encodeURIComponent(SHARE_TEXT), '_blank'); }
+function copyLink() {
+  navigator.clipboard.writeText(SHARE_URL).then(() => { lpShowToast('🔗 ¡Enlace copiado!'); }).catch(() => { lpShowToast('Copia: ' + SHARE_URL); });
+}
+
+/* ═══════════════════════════════════════
+   QR CODE REAL (qrcodejs)
+═══════════════════════════════════════ */
+function initQR() {
+  const el = document.getElementById('qrCode');
+  new QRCode(el, {
+    text: 'https://onlineradiodilson101cuevo.netlify.app/instalar',
+    width: 80,
+    height: 80,
+    colorDark: '#04030c',
+    colorLight: '#ffffff',
+    correctLevel: QRCode.CorrectLevel.H
+  });
+}
+
+function downloadQR() {
+  const img = document.querySelector('#qrCode img');
+  const canvas = document.querySelector('#qrCode canvas');
+  let src = '';
+  if (canvas) src = canvas.toDataURL('image/png');
+  else if (img) src = img.src;
+  if (!src) { lpShowToast('⚠️ QR no disponible aún'); return; }
+  const a = document.createElement('a');
+  a.href = src; a.download = 'qr-radio-dilson.png'; a.click();
+  lpShowToast('✅ QR descargado');
+}
+
+/* ═══════════════════════════════════════
+   TOAST
+═══════════════════════════════════════ */
+function lpShowToast(msg) {
+  const t = document.getElementById('lpToast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3500);
+}
+</script>
+<script>
+/* Registro del service worker — Chrome exige un SW con manejador fetch para
+   ofrecer la instalación de la PWA en esta página (el registro vive en app.js,
+   que esta página no carga). */
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js').catch(() => {}));
+}
+</script>
+</body>
+</html>

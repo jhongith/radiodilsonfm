@@ -1,0 +1,1451 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Radio Dilson 101.9 FM">
+  <meta name="theme-color" content="#030d0d">
+  <title>Radio Dilson 101.9 FM — Sin Conexión</title>
+
+  <!-- Mismas fuentes que index.html -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Grotesk:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;800&display=swap" rel="stylesheet">
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="icon-192.png">
+
+  <style>
+    /* ═══════════════════════════════════════════════
+       VARIABLES — Mismas del sistema Dilson FM
+       ═══════════════════════════════════════════════ */
+    :root {
+      --gold:        #f5c842;
+      --gold-dark:   #c9a22a;
+      --gold-light:  #ffe680;
+      --bg:          #030d0d;
+      --bg2:         #080c14;
+      --card:        rgba(8, 20, 20, 0.97);
+      --card2:       rgba(12, 26, 26, 0.95);
+      --error:       #ff4060;
+      --success:     #2ddf8a;
+      --cyan:        #00ffcc;
+      --border:      rgba(245, 200, 66, 0.18);
+      --border2:     rgba(245, 200, 66, 0.08);
+      --muted:       rgba(255,255,255,0.38);
+      --text:        #ffffff;
+      --radius-card: 32px;
+    }
+
+    * {
+      margin: 0; padding: 0;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+
+    html, body {
+      height: 100%;
+      overflow-x: hidden;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Space Grotesk', sans-serif;
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding: env(safe-area-inset-top, 0) 0 env(safe-area-inset-bottom, 0);
+      position: relative;
+    }
+
+    /* ── Fondo — mismo que index.html ── */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse at 15% 20%, rgba(245,200,66,0.07) 0%, transparent 45%),
+        radial-gradient(ellipse at 85% 75%, rgba(0,255,204,0.04) 0%, transparent 45%),
+        radial-gradient(ellipse at 50% 50%, rgba(255,64,96,0.03) 0%, transparent 60%),
+        repeating-linear-gradient(45deg, rgba(255,255,255,0.012) 0px, rgba(255,255,255,0.012) 1px, transparent 1px, transparent 22px);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── Grid de fondo (igual que index) ── */
+    .grid-bg {
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(245,200,66,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(245,200,66,0.03) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── Aurora decorativa (igual que index) ── */
+    .bg-aurora {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+    .aurora-1, .aurora-2, .aurora-3 {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      animation: auroraFloat 18s ease-in-out infinite alternate;
+    }
+    .aurora-1 {
+      width: 500px; height: 500px;
+      background: radial-gradient(circle, rgba(245,200,66,0.06), transparent 70%);
+      top: -150px; left: -100px;
+    }
+    .aurora-2 {
+      width: 600px; height: 400px;
+      background: radial-gradient(circle, rgba(0,255,204,0.04), transparent 70%);
+      bottom: -100px; right: -150px;
+      animation-delay: -6s;
+    }
+    .aurora-3 {
+      width: 350px; height: 350px;
+      background: radial-gradient(circle, rgba(255,64,96,0.04), transparent 70%);
+      top: 40%; left: 50%;
+      transform: translateX(-50%);
+      animation-delay: -12s;
+    }
+    @keyframes auroraFloat {
+      0%   { transform: scale(1) translate(0,0); }
+      100% { transform: scale(1.15) translate(20px, -20px); }
+    }
+
+    /* ══════════════════════════════════════════
+       TOPBAR — Idéntica al index.html
+       ══════════════════════════════════════════ */
+    .topbar {
+      position: sticky;
+      top: 0;
+      width: 100%;
+      max-width: 480px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 18px 12px;
+      background: rgba(3,13,13,0.92);
+      backdrop-filter: blur(20px) saturate(160%);
+      -webkit-backdrop-filter: blur(20px) saturate(160%);
+      border-bottom: 1px solid var(--border2);
+      z-index: 100;
+      animation: slideDown 0.4s ease;
+    }
+    @keyframes slideDown {
+      from { transform: translateY(-100%); opacity: 0; }
+      to   { transform: translateY(0);     opacity: 1; }
+    }
+
+    .topbar-logo {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.25rem;
+      letter-spacing: 2px;
+      background: linear-gradient(135deg, var(--gold-light), var(--gold));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    /* Pill de estado — sin conexión */
+    .pill-offline {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      background: rgba(255,64,96,0.12);
+      border: 1px solid rgba(255,64,96,0.35);
+      border-radius: 999px;
+      padding: 4px 10px;
+      font-size: 0.62rem;
+      font-weight: 700;
+      color: var(--error);
+      letter-spacing: 0.5px;
+    }
+    .pill-offline .dot-off {
+      width: 6px; height: 6px;
+      background: var(--error);
+      border-radius: 50%;
+      animation: blink 1.8s ease infinite;
+    }
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0.2; }
+    }
+
+    /* ══════════════════════════════════════════
+       LAYOUT PRINCIPAL
+       ══════════════════════════════════════════ */
+    .page {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 480px;
+      padding: 20px 16px 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    /* ══════════════════════════════════════════
+       CARD PRINCIPAL — Estado offline
+       ══════════════════════════════════════════ */
+    .offline-hero {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-card);
+      padding: 28px 22px 24px;
+      text-align: center;
+      backdrop-filter: blur(20px) saturate(180%);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+      box-shadow:
+        0 30px 60px rgba(0,0,0,0.7),
+        0 0 0 1px rgba(245,200,66,0.06),
+        inset 0 1px 0 rgba(255,255,255,0.04);
+      position: relative;
+      overflow: hidden;
+      animation: cardIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 0.1s both;
+    }
+    @keyframes cardIn {
+      from { opacity: 0; transform: scale(0.93) translateY(16px); }
+      to   { opacity: 1; transform: scale(1)    translateY(0); }
+    }
+
+    /* Línea dorada superior */
+    .offline-hero::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 10%; right: 10%;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--error), rgba(255,64,96,0.5), var(--error), transparent);
+      border-radius: 2px;
+    }
+
+    /* Patrón de fondo sutil */
+    .offline-hero::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(
+        -45deg,
+        transparent, transparent 20px,
+        rgba(245,200,66,0.012) 20px, rgba(245,200,66,0.012) 21px
+      );
+      pointer-events: none;
+    }
+
+    /* Logo del sistema en la card */
+    .hero-logo-wrap {
+      position: relative;
+      width: 80px; height: 80px;
+      margin: 0 auto 16px;
+    }
+    .hero-logo-ring {
+      position: absolute;
+      inset: -6px;
+      border-radius: 50%;
+      border: 1.5px solid rgba(255,64,96,0.3);
+      animation: spin 8s linear infinite;
+    }
+    .hero-logo-ring::after {
+      content: '';
+      position: absolute;
+      top: -1px; left: 50%;
+      width: 6px; height: 6px;
+      background: var(--error);
+      border-radius: 50%;
+      transform: translateX(-50%);
+      box-shadow: 0 0 8px var(--error);
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    .hero-logo-img {
+      width: 80px; height: 80px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid rgba(245,200,66,0.25);
+      filter: drop-shadow(0 0 12px rgba(245,200,66,0.35));
+      display: block;
+      position: relative;
+      z-index: 1;
+    }
+    /* Fallback SVG cuando no hay imagen */
+    .hero-logo-fb {
+      display: none;
+      width: 80px; height: 80px;
+      border-radius: 50%;
+      border: 2px solid rgba(245,200,66,0.25);
+      background: radial-gradient(#1a1505, #080600);
+      align-items: center; justify-content: center;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2.5rem;
+      color: var(--gold);
+      text-shadow: 0 0 20px rgba(245,200,66,0.7);
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255,64,96,0.1);
+      border: 1px solid rgba(255,64,96,0.28);
+      border-radius: 999px;
+      padding: 5px 14px;
+      font-size: 0.68rem;
+      font-weight: 700;
+      color: var(--error);
+      letter-spacing: 0.8px;
+      margin-bottom: 10px;
+    }
+    .hero-badge .dot-sm {
+      width: 5px; height: 5px;
+      border-radius: 50%;
+      background: var(--error);
+      animation: blink 1.8s ease infinite;
+    }
+
+    .hero-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2rem;
+      letter-spacing: 1.5px;
+      line-height: 1;
+      background: linear-gradient(135deg, var(--gold-light), var(--gold), var(--gold-dark));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 6px;
+    }
+
+    .hero-sub {
+      font-size: 0.78rem;
+      color: var(--muted);
+      line-height: 1.5;
+      margin-bottom: 20px;
+    }
+
+    /* Botón principal — mismo estilo que index */
+    .btn-main {
+      width: 100%;
+      background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+      color: #000;
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: 0.88rem;
+      letter-spacing: 0.3px;
+      padding: 15px 20px;
+      border-radius: 999px;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      box-shadow: 0 8px 24px rgba(245,200,66,0.28);
+      transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 10px;
+    }
+    .btn-main::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(rgba(255,255,255,0.15), transparent);
+      border-radius: inherit;
+    }
+    .btn-main:active { transform: scale(0.96); }
+    .btn-main:hover  { box-shadow: 0 12px 30px rgba(245,200,66,0.4); }
+
+    .btn-secondary {
+      width: 100%;
+      background: rgba(255,255,255,0.04);
+      color: var(--muted);
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 600;
+      font-size: 0.78rem;
+      padding: 12px 20px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.1);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: all 0.2s;
+      text-decoration: none;
+    }
+    .btn-secondary:active { transform: scale(0.97); }
+    .btn-secondary:hover  { border-color: var(--border); color: rgba(255,255,255,0.7); }
+
+    /* ══════════════════════════════════════════
+       INFO DE ESTADO — Detalles de conexión
+       ══════════════════════════════════════════ */
+    .status-card {
+      background: var(--card2);
+      border: 1px solid var(--border2);
+      border-radius: 20px;
+      padding: 16px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      animation: cardIn 0.5s ease 0.2s both;
+    }
+
+    .status-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.78rem;
+    }
+    .status-label {
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .status-value {
+      font-weight: 600;
+      color: rgba(255,255,255,0.7);
+      font-family: 'Space Grotesk', monospace;
+      font-size: 0.75rem;
+    }
+    .status-value.ok    { color: var(--success); }
+    .status-value.error { color: var(--error); }
+    .status-value.warn  { color: var(--gold); }
+
+    .status-divider {
+      height: 1px;
+      background: var(--border2);
+      margin: 2px 0;
+    }
+
+    /* ══════════════════════════════════════════
+       JUEGO — Sección colapsable con el juego
+       ══════════════════════════════════════════ */
+    .game-section {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-card);
+      overflow: hidden;
+      animation: cardIn 0.5s ease 0.3s both;
+    }
+
+    .game-toggle {
+      width: 100%;
+      background: none;
+      border: none;
+      padding: 18px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .game-toggle:active { background: rgba(255,255,255,0.03); }
+
+    .game-toggle-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .game-toggle-icon {
+      width: 36px; height: 36px;
+      background: rgba(245,200,66,0.1);
+      border: 1px solid rgba(245,200,66,0.2);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+    }
+    .game-toggle-text .gt-title {
+      font-weight: 700;
+      font-size: 0.9rem;
+      color: var(--text);
+      text-align: left;
+    }
+    .game-toggle-text .gt-sub {
+      font-size: 0.68rem;
+      color: var(--muted);
+    }
+
+    .game-arrow {
+      font-size: 0.9rem;
+      color: var(--muted);
+      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .game-arrow.open { transform: rotate(180deg); }
+
+    .game-divider {
+      height: 1px;
+      background: var(--border2);
+      display: none;
+    }
+    .game-divider.show { display: block; }
+
+    /* Contenedor del juego */
+    .game-body {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .game-body.open { max-height: 600px; }
+
+    .game-inner {
+      padding: 0 16px 20px;
+    }
+
+    /* Score bar */
+    .score-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(0,0,0,0.3);
+      border-radius: 999px;
+      padding: 8px 14px;
+      margin-bottom: 12px;
+      border: 1px solid var(--border2);
+    }
+    .score-item {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 0.72rem;
+      color: var(--muted);
+    }
+    .score-value {
+      font-weight: 800;
+      color: var(--gold);
+      font-size: 0.95rem;
+    }
+    .lives {
+      display: flex;
+      gap: 4px;
+    }
+    .life {
+      width: 18px; height: 18px;
+      background: rgba(255,64,96,0.12);
+      border: 1px solid rgba(255,64,96,0.25);
+      border-radius: 5px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.65rem;
+      color: var(--error);
+      transition: all 0.2s;
+    }
+    .life.active {
+      background: rgba(255,64,96,0.25);
+      border-color: var(--error);
+    }
+
+    /* Canvas del juego */
+    .game-wrapper {
+      position: relative;
+      width: 100%;
+      border-radius: 16px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+    }
+
+    #game-container {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 300/200;
+      background: #000;
+      touch-action: none;
+    }
+
+    canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+      background: #050f0f;
+    }
+
+    /* Pantalla de inicio del juego */
+    #start-screen {
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,0.88);
+      backdrop-filter: blur(10px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+      gap: 12px;
+    }
+
+    .start-emoji {
+      font-size: 2.5rem;
+      animation: bounce 1s ease infinite;
+    }
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50%       { transform: translateY(-8px); }
+    }
+
+    .start-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.4rem;
+      letter-spacing: 2px;
+      color: var(--gold);
+    }
+    .start-sub {
+      font-size: 0.7rem;
+      color: var(--muted);
+      text-align: center;
+      padding: 0 20px;
+    }
+
+    .btn-play {
+      background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+      color: #000;
+      font-weight: 800;
+      font-size: 0.8rem;
+      padding: 12px 28px;
+      border-radius: 999px;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 6px 18px rgba(245,200,66,0.35);
+      transition: all 0.2s;
+    }
+    .btn-play:active { transform: scale(0.95); }
+
+    /* Record toast */
+    #recordToast {
+      position: absolute;
+      top: 10px; left: 50%;
+      transform: translateX(-50%) translateY(-50px);
+      background: rgba(245,200,66,0.12);
+      border: 1px solid rgba(245,200,66,0.4);
+      border-radius: 999px;
+      padding: 6px 14px;
+      font-size: 0.68rem;
+      font-weight: 700;
+      color: var(--gold);
+      white-space: nowrap;
+      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      z-index: 20;
+    }
+    #recordToast.show {
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* ══════════════════════════════════════════
+       REDES SOCIALES — Mismo estilo que index
+       ══════════════════════════════════════════ */
+    .social-card {
+      background: var(--card2);
+      border: 1px solid var(--border2);
+      border-radius: 20px;
+      padding: 18px;
+      animation: cardIn 0.5s ease 0.4s both;
+    }
+
+    .section-title {
+      font-size: 0.65rem;
+      font-weight: 700;
+      color: var(--muted);
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .section-title::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border2);
+    }
+
+    .sgrid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .sbtn {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 14px;
+      padding: 12px 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      color: var(--text);
+      transition: all 0.2s;
+    }
+    .sbtn:active {
+      transform: scale(0.97);
+      background: rgba(255,255,255,0.06);
+    }
+    .si { font-size: 1.3rem; flex-shrink: 0; }
+    .sn { font-weight: 600; font-size: 0.8rem; }
+    .sh { font-size: 0.62rem; color: var(--muted); }
+
+    /* ══════════════════════════════════════════
+       WHATSAPP DIRECTO
+       ══════════════════════════════════════════ */
+    .wapp-card {
+      background: linear-gradient(135deg, rgba(37,211,102,0.08), rgba(37,211,102,0.02));
+      border: 1px solid rgba(37,211,102,0.22);
+      border-radius: 20px;
+      padding: 18px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      text-decoration: none;
+      color: var(--text);
+      transition: all 0.2s;
+      animation: cardIn 0.5s ease 0.45s both;
+    }
+    .wapp-card:active { transform: scale(0.98); }
+
+    .wapp-icon {
+      width: 48px; height: 48px;
+      background: rgba(37,211,102,0.15);
+      border: 1px solid rgba(37,211,102,0.3);
+      border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.5rem;
+      flex-shrink: 0;
+    }
+    .wapp-info .wt { font-weight: 700; font-size: 0.9rem; }
+    .wapp-info .ws { font-size: 0.72rem; color: var(--muted); margin-top: 2px; }
+
+    .wapp-arrow {
+      margin-left: auto;
+      color: rgba(37,211,102,0.5);
+      font-size: 1.1rem;
+    }
+
+    /* ══════════════════════════════════════════
+       FOOTER — Mismo que index
+       ══════════════════════════════════════════ */
+    .footer {
+      text-align: center;
+      font-size: 0.62rem;
+      color: rgba(255,255,255,0.18);
+      padding: 8px 0 16px;
+      line-height: 1.8;
+      animation: cardIn 0.5s ease 0.5s both;
+    }
+    .footer strong { color: rgba(245,200,66,0.3); }
+
+    /* ══════════════════════════════════════════
+       PARTÍCULAS FLOTANTES (igual que offline original)
+       ══════════════════════════════════════════ */
+    .particle {
+      position: fixed;
+      width: 2px; height: 2px;
+      background: var(--gold);
+      border-radius: 50%;
+      opacity: 0.25;
+      pointer-events: none;
+      animation: floatUp linear infinite;
+    }
+    @keyframes floatUp {
+      0%   { transform: translateY(100vh) translateX(0); opacity: 0; }
+      20%  { opacity: 0.4; }
+      80%  { opacity: 0.4; }
+      100% { transform: translateY(-100px) translateX(40px); opacity: 0; }
+    }
+
+    /* ══════════════════════════════════════════
+       TOAST (igual que app.js)
+       ══════════════════════════════════════════ */
+    #toast {
+      position: fixed;
+      bottom: calc(env(safe-area-inset-bottom, 0px) + 24px);
+      left: 50%;
+      transform: translateX(-50%) translateY(80px);
+      background: rgba(8,20,20,0.97);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 10px 20px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--text);
+      white-space: nowrap;
+      z-index: 9999;
+      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+      pointer-events: none;
+    }
+    #toast.show { transform: translateX(-50%) translateY(0); }
+
+    /* ══════════════════════════════════════════
+       RESPONSIVO
+       ══════════════════════════════════════════ */
+    @media (min-width: 480px) {
+      .topbar, .page { max-width: 480px; margin: 0 auto; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Partículas flotantes -->
+<div class="particle" style="left:10%;animation-duration:14s;animation-delay:0s;"></div>
+<div class="particle" style="left:25%;animation-duration:18s;animation-delay:-4s;"></div>
+<div class="particle" style="left:45%;animation-duration:12s;animation-delay:-7s;"></div>
+<div class="particle" style="left:65%;animation-duration:16s;animation-delay:-2s;"></div>
+<div class="particle" style="left:80%;animation-duration:20s;animation-delay:-10s;"></div>
+<div class="particle" style="left:90%;animation-duration:15s;animation-delay:-5s;"></div>
+
+<!-- Fondo -->
+<div class="grid-bg" aria-hidden="true"></div>
+<div class="bg-aurora" aria-hidden="true">
+  <div class="aurora-1"></div>
+  <div class="aurora-2"></div>
+  <div class="aurora-3"></div>
+</div>
+
+<!-- TOPBAR — idéntica al index -->
+<nav class="topbar" role="banner">
+  <div class="topbar-logo">Radio DILSON · 101.9</div>
+  <div class="topbar-right">
+    <div class="pill-offline" role="status" aria-live="polite">
+      <div class="dot-off" aria-hidden="true"></div>
+      SIN SEÑAL
+    </div>
+  </div>
+</nav>
+
+<!-- CONTENIDO PRINCIPAL -->
+<main class="page" role="main">
+
+  <!-- ── CARD HERO: Estado offline ── -->
+  <div class="offline-hero">
+    <!-- Logo del sistema -->
+    <div class="hero-logo-wrap">
+      <div class="hero-logo-ring" aria-hidden="true"></div>
+      <img src="logodilson2.png" alt="Radio Dilson 101.9 FM" class="hero-logo-img"
+           id="heroLogoImg"
+           onerror="this.style.display='none';document.getElementById('heroLogoFb').style.display='flex'">
+      <div class="hero-logo-fb" id="heroLogoFb" aria-hidden="true">D</div>
+    </div>
+
+    <div class="hero-badge">
+      <div class="dot-sm" aria-hidden="true"></div>
+      SIN CONEXIÓN
+    </div>
+
+    <h1 class="hero-title">RADIO DILSON 101.9 FM</h1>
+    <p class="hero-sub">
+      Parece que no tienes internet en este momento.<br>
+      Revisa tu conexión e intenta de nuevo.
+    </p>
+
+    <!-- Botón principal: reintentar -->
+    <button class="btn-main" onclick="retryConnection()" aria-label="Reintentar conexión">
+      <span>↺</span>
+      REINTENTAR CONEXIÓN
+    </button>
+
+    <!-- Botón secundario: WhatsApp directo -->
+    <a class="btn-secondary" href="https://wa.me/59172635314" target="_blank" rel="noopener"
+       aria-label="Abrir WhatsApp de Radio Dilson">
+      <span>💬</span>
+      Contactar por WhatsApp
+    </a>
+  </div>
+
+  <!-- ── CARD DE ESTADO DEL SISTEMA ── -->
+  <div class="status-card" role="status" aria-label="Estado del sistema">
+    <div class="status-row">
+      <span class="status-label">🌐 Internet</span>
+      <span class="status-value error" id="statusInternet">Sin conexión</span>
+    </div>
+    <div class="status-divider"></div>
+    <div class="status-row">
+      <span class="status-label">📻 Stream</span>
+      <span class="status-value warn">No disponible offline</span>
+    </div>
+    <div class="status-divider"></div>
+    <div class="status-row">
+      <span class="status-label">💾 App en caché</span>
+      <span class="status-value ok">✓ Disponible</span>
+    </div>
+    <div class="status-divider"></div>
+    <div class="status-row">
+      <span class="status-label">🕐 Hora local</span>
+      <span class="status-value" id="statusTime">--:--</span>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════
+       JUEGO: Dilson Breakout
+       Colapsable con toggle elegante
+       ══════════════════════════════════ -->
+  <div class="game-section" aria-label="Mini juego offline">
+
+    <!-- Toggle para expandir/colapsar -->
+    <button class="game-toggle" onclick="toggleGame()" id="gameToggleBtn" aria-expanded="false"
+            aria-controls="gameBody" aria-label="Abrir mini juego">
+      <div class="game-toggle-left">
+        <div class="game-toggle-icon" aria-hidden="true">🎮</div>
+        <div class="game-toggle-text">
+          <div class="gt-title">Mini Juego — Dilson Breakout</div>
+          <div class="gt-sub">Juega mientras esperas la señal</div>
+        </div>
+      </div>
+      <div class="game-arrow" id="gameArrow" aria-hidden="true">▼</div>
+    </button>
+
+    <div class="game-divider" id="gameDivider" aria-hidden="true"></div>
+
+    <!-- Cuerpo del juego (colapsable) -->
+    <div class="game-body" id="gameBody" role="region" aria-hidden="true">
+      <div class="game-inner">
+
+        <!-- Score bar -->
+        <div class="score-bar" role="status" aria-live="polite">
+          <div class="score-item">
+            🎯 <span class="score-value" id="scoreDisplay">0</span>
+          </div>
+          <div class="lives" id="livesContainer" aria-label="Vidas"></div>
+          <div class="score-item">
+            🏆 <span class="score-value" id="recordDisplay">0</span>
+          </div>
+        </div>
+
+        <!-- Canvas del juego -->
+        <div class="game-wrapper">
+          <div id="game-container">
+            <canvas id="gameCanvas" aria-hidden="true"></canvas>
+
+            <!-- Pantalla de inicio -->
+            <div id="start-screen">
+              <div class="start-emoji">🎵</div>
+              <div class="start-title">DILSON BREAKOUT</div>
+              <p class="start-sub">Toca o desliza para mover la raqueta</p>
+              <button class="btn-play" onclick="startGame()" aria-label="Iniciar juego">
+                <span>▶</span> JUGAR
+              </button>
+            </div>
+
+            <!-- Toast de récord -->
+            <div id="recordToast" aria-live="polite">🏆 ¡Nuevo récord!</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ── REDES SOCIALES ── -->
+  <div class="social-card" role="region" aria-label="Redes sociales de Radio Dilson">
+    <div class="section-title">📡 SÍGUENOS</div>
+    <div class="sgrid">
+      <a class="sbtn" href="https://facebook.com/radiodilson101fm" target="_blank" rel="noopener" aria-label="Facebook de Radio Dilson">
+        <div class="si" aria-hidden="true">📘</div>
+        <div><div class="sn">Facebook</div><div class="sh">@radiodilson101fm</div></div>
+      </a>
+      <a class="sbtn" href="https://chat.whatsapp.com/HKvQkffKu4m546MzUVbqBc" target="_blank" rel="noopener" aria-label="Grupo WhatsApp Dilson FM">
+        <div class="si" aria-hidden="true">💬</div>
+        <div><div class="sn">WhatsApp</div><div class="sh">Grupo Dilson FM</div></div>
+      </a>
+      <a class="sbtn" href="https://tiktok.com/@radiodilson101fm" target="_blank" rel="noopener" aria-label="TikTok de Radio Dilson">
+        <div class="si" aria-hidden="true">🎵</div>
+        <div><div class="sn">TikTok</div><div class="sh">@radiodilson101fm</div></div>
+      </a>
+      <a class="sbtn" href="https://youtube.com/radiodilson101fm" target="_blank" rel="noopener" aria-label="YouTube de Radio Dilson">
+        <div class="si" aria-hidden="true">▶️</div>
+        <div><div class="sn">YouTube</div><div class="sh">En Vivo</div></div>
+      </a>
+    </div>
+  </div>
+
+  <!-- ── WHATSAPP DIRECTO ── -->
+  <a class="wapp-card" href="https://wa.me/59172635314" target="_blank" rel="noopener"
+     aria-label="Enviar mensaje directo a Radio Dilson por WhatsApp">
+    <div class="wapp-icon" aria-hidden="true">💬</div>
+    <div class="wapp-info">
+      <div class="wt">¿Necesitas ayuda?</div>
+      <div class="ws">Escríbenos directo al +591 72635314</div>
+    </div>
+    <div class="wapp-arrow" aria-hidden="true">→</div>
+  </a>
+
+  <!-- FOOTER -->
+  <div class="footer" role="contentinfo">
+    © Desarrollado por<br>
+    <strong>JHOMITECH</strong> · Todos los derechos reservados
+  </div>
+
+</main>
+
+<!-- Toast global -->
+<div id="toast" role="status" aria-live="polite">📡</div>
+
+<script>
+/* ═══════════════════════════════════════════════════════════
+   Radio Dilson 101.9 FM — offline.html JavaScript
+   Integrado al sistema: mismo estilo que app.js
+   ═══════════════════════════════════════════════════════════ */
+
+/* ── ESTADO OFFLINE: monitorear conexión en tiempo real ── */
+function updateConnectionStatus() {
+  const el = document.getElementById('statusInternet');
+  if (navigator.onLine) {
+    el.textContent = 'Detectada — recargando...';
+    el.className = 'status-value ok';
+    setTimeout(() => {
+      window.location.href = '/';
+    }, 800);
+  } else {
+    el.textContent = 'Sin conexión';
+    el.className = 'status-value error';
+  }
+}
+
+window.addEventListener('online',  updateConnectionStatus);
+window.addEventListener('offline', updateConnectionStatus);
+updateConnectionStatus();
+
+/* ── RELOJ en tiempo real ── */
+function updateClock() {
+  const now = new Date();
+  const h = String(now.getHours()).padStart(2,'0');
+  const m = String(now.getMinutes()).padStart(2,'0');
+  const el = document.getElementById('statusTime');
+  if (el) el.textContent = `${h}:${m}`;
+}
+updateClock();
+setInterval(updateClock, 10000);
+
+/* ── REINTENTAR CONEXIÓN ── */
+function retryConnection() {
+  if (navigator.onLine) {
+    window.location.href = '/';
+  } else {
+    toast('📶 Aún sin conexión. Revisa tu red.');
+  }
+}
+
+/* ── TOAST — Mismo que app.js ── */
+let toastTimer;
+function toast(msg) {
+  const el = document.getElementById('toast');
+  if (!el) return;
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove('show'), 2800);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   TOGGLE DEL JUEGO — Colapsable suave
+   ═══════════════════════════════════════════════════════════ */
+let gameOpen    = false;
+let gameStarted = false;
+
+function toggleGame() {
+  gameOpen = !gameOpen;
+  const body    = document.getElementById('gameBody');
+  const arrow   = document.getElementById('gameArrow');
+  const divider = document.getElementById('gameDivider');
+  const btn     = document.getElementById('gameToggleBtn');
+
+  body.classList.toggle('open',    gameOpen);
+  arrow.classList.toggle('open',   gameOpen);
+  divider.classList.toggle('show', gameOpen);
+  btn.setAttribute('aria-expanded', gameOpen);
+  body.setAttribute('aria-hidden',  !gameOpen);
+
+  /* Inicializar canvas la primera vez que se abre */
+  if (gameOpen && !gameStarted) {
+    gameStarted = true;
+    initGame();
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   DILSON BREAKOUT — Mini juego completo
+   Mismo código del offline.html original, refactorizado
+   ═══════════════════════════════════════════════════════════ */
+
+let canvas, ctx, animationId;
+let gameRunning = false;
+
+// Estado del juego
+let score = 0, lives = 3;
+let highScore = 0;
+
+try {
+  highScore = parseInt(localStorage.getItem('dilson_offline_highscore') || '0') || 0;
+} catch(e) {}
+
+const scoreDisplay  = document.getElementById('scoreDisplay');
+const recordDisplay = document.getElementById('recordDisplay');
+const livesContainer= document.getElementById('livesContainer');
+const startScreen   = document.getElementById('start-screen');
+const recordToast   = document.getElementById('recordToast');
+
+// Inicializar récord visual
+if (recordDisplay) recordDisplay.textContent = highScore;
+
+// ── Objetos del juego ──
+const paddle = { x: 0, width: 56, height: 7 };
+const ball   = { x: 150, y: 160, dx: 2.2, dy: -2.2, radius: 5, baseSpeed: 2.2 };
+
+// Ladrillos
+const brickRows    = 4;
+const brickCols    = 7;
+const brickWidth   = 34;
+const brickHeight  = 10;
+const brickPadding = 5;
+const brickOffsetTop  = 20;
+const brickOffsetLeft = 12;
+
+let bricks = [];
+
+function initBricks() {
+  bricks = [];
+  for (let c = 0; c < brickCols; c++) {
+    bricks[c] = [];
+    for (let r = 0; r < brickRows; r++) {
+      bricks[c][r] = { status: 1, x: 0, y: 0 };
+    }
+  }
+}
+
+function initGame() {
+  canvas = document.getElementById('gameCanvas');
+  if (!canvas) return;
+
+  const container = document.getElementById('game-container');
+  canvas.width    = container.offsetWidth  || 300;
+  canvas.height   = container.offsetHeight || 200;
+  ctx = canvas.getContext('2d');
+
+  paddle.x = canvas.width / 2 - paddle.width / 2;
+  ball.x   = canvas.width  / 2;
+  ball.y   = canvas.height * 0.8;
+
+  initBricks();
+  updateLives();
+  updateScore();
+
+  // Controles táctiles y de ratón
+  canvas.addEventListener('mousemove', onPointerMove);
+  canvas.addEventListener('touchmove', onTouchMove, { passive: false });
+}
+
+function onPointerMove(e) {
+  const rect = canvas.getBoundingClientRect();
+  const relX = e.clientX - rect.left;
+  const scale = canvas.width / rect.width;
+  paddle.x = relX * scale - paddle.width / 2;
+  clampPaddle();
+}
+
+function onTouchMove(e) {
+  e.preventDefault();
+  const rect  = canvas.getBoundingClientRect();
+  const touch = e.touches[0];
+  const relX  = touch.clientX - rect.left;
+  const scale = canvas.width / rect.width;
+  paddle.x = relX * scale - paddle.width / 2;
+  clampPaddle();
+}
+
+function clampPaddle() {
+  if (paddle.x < 0) paddle.x = 0;
+  if (paddle.x + paddle.width > canvas.width) paddle.x = canvas.width - paddle.width;
+}
+
+/* ── Actualizar vidas ── */
+function updateLives() {
+  if (!livesContainer) return;
+  livesContainer.innerHTML = '';
+  for (let i = 0; i < 3; i++) {
+    const life = document.createElement('div');
+    life.className = 'life' + (i < lives ? ' active' : '');
+    life.textContent = i < lives ? '❤️' : '🖤';
+    life.setAttribute('aria-label', i < lives ? 'Vida activa' : 'Vida perdida');
+    livesContainer.appendChild(life);
+  }
+}
+
+/* ── Actualizar puntuación ── */
+function updateScore() {
+  if (scoreDisplay)  scoreDisplay.textContent  = score;
+  if (score > highScore) {
+    highScore = score;
+    if (recordDisplay) recordDisplay.textContent = highScore;
+    try { localStorage.setItem('dilson_offline_highscore', highScore); } catch(e) {}
+    if (recordToast) {
+      recordToast.classList.add('show');
+      setTimeout(() => recordToast.classList.remove('show'), 2000);
+    }
+  }
+}
+
+/* ── Reiniciar juego ── */
+function resetGame() {
+  ball.x  = canvas.width  / 2;
+  ball.y  = canvas.height * 0.8;
+  ball.dx = ball.baseSpeed;
+  ball.dy = -ball.baseSpeed;
+  initBricks();
+  score = 0;
+  lives = 3;
+  updateScore();
+  updateLives();
+}
+
+/* ── Iniciar juego ── */
+function startGame() {
+  if (!canvas) initGame();
+  if (startScreen) startScreen.style.display = 'none';
+  if (!gameRunning) {
+    resetGame();
+    gameRunning = true;
+    gameLoop();
+  }
+}
+
+/* ── Sistema de partículas ── */
+const particles = [];
+function createParticle(x, y) {
+  particles.push({
+    x, y,
+    vx: (Math.random() - 0.5) * 2.5,
+    vy: (Math.random() - 0.5) * 2.5,
+    life: 1,
+    size: 1.5 + Math.random() * 2.5
+  });
+}
+
+function updateParticles() {
+  for (let i = particles.length - 1; i >= 0; i--) {
+    const p = particles[i];
+    p.x += p.vx;
+    p.y += p.vy;
+    p.life -= 0.025;
+    if (p.life <= 0) particles.splice(i, 1);
+  }
+}
+
+function drawParticles() {
+  particles.forEach(p => {
+    ctx.save();
+    ctx.globalAlpha = p.life * 0.9;
+    ctx.fillStyle = p.life > 0.5 ? '#f5c842' : '#ff4060';
+    ctx.fillRect(p.x, p.y, p.size, p.size);
+    ctx.restore();
+  });
+}
+
+/* ── Game Loop ── */
+function gameLoop() {
+  if (!gameRunning) return;
+
+  // Limpiar
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  // Fondo
+  const bg = ctx.createLinearGradient(0, 0, 0, canvas.height);
+  bg.addColorStop(0, '#050f0f');
+  bg.addColorStop(1, '#030d0d');
+  ctx.fillStyle = bg;
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  // Ladrillos
+  for (let c = 0; c < brickCols; c++) {
+    for (let r = 0; r < brickRows; r++) {
+      if (bricks[c][r].status === 1) {
+        const bx = c * (brickWidth + brickPadding) + brickOffsetLeft;
+        const by = r * (brickHeight + brickPadding) + brickOffsetTop;
+        bricks[c][r].x = bx;
+        bricks[c][r].y = by;
+
+        // Color por fila
+        const hues = ['#f5c842','#00ffcc','#ff4060','#a78bfa'];
+        ctx.shadowColor = hues[r % hues.length];
+        ctx.shadowBlur  = 6;
+
+        const bg2 = ctx.createLinearGradient(bx, by, bx + brickWidth, by + brickHeight);
+        bg2.addColorStop(0, hues[r % hues.length]);
+        bg2.addColorStop(1, hues[r % hues.length] + '99');
+        ctx.fillStyle = bg2;
+
+        roundRect(ctx, bx, by, brickWidth, brickHeight, 3);
+        ctx.fill();
+      }
+    }
+  }
+
+  ctx.shadowBlur = 0;
+
+  // Raqueta
+  const rg = ctx.createLinearGradient(paddle.x, 0, paddle.x + paddle.width, 0);
+  rg.addColorStop(0, '#ffffff');
+  rg.addColorStop(1, '#f5c842');
+  ctx.fillStyle = rg;
+  ctx.shadowColor = 'rgba(245,200,66,0.6)';
+  ctx.shadowBlur  = 10;
+  roundRect(ctx, paddle.x, canvas.height - paddle.height - 4, paddle.width, paddle.height, 4);
+  ctx.fill();
+
+  // Pelota
+  ctx.shadowColor = '#f5c842';
+  ctx.shadowBlur  = 14;
+  ctx.beginPath();
+  ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);
+  const ballG = ctx.createRadialGradient(ball.x-1, ball.y-1, 0, ball.x, ball.y, ball.radius+2);
+  ballG.addColorStop(0, '#ffffff');
+  ballG.addColorStop(1, '#f5c842');
+  ctx.fillStyle = ballG;
+  ctx.fill();
+
+  ctx.shadowBlur = 0;
+
+  // Partículas
+  drawParticles();
+  updateParticles();
+
+  // Movimiento
+  ball.x += ball.dx;
+  ball.y += ball.dy;
+
+  // Colisiones paredes
+  if (ball.x + ball.dx > canvas.width - ball.radius || ball.x + ball.dx < ball.radius) {
+    ball.dx = -ball.dx;
+    createParticle(ball.x, ball.y);
+  }
+  if (ball.y + ball.dy < ball.radius) {
+    ball.dy = -ball.dy;
+    createParticle(ball.x, ball.y);
+  }
+
+  // Colisión raqueta
+  const paddleY = canvas.height - paddle.height - 4;
+  if (ball.y + ball.dy > paddleY - ball.radius) {
+    if (ball.x > paddle.x && ball.x < paddle.x + paddle.width) {
+      const hitPos = (ball.x - paddle.x) / paddle.width;
+      const angle  = (hitPos - 0.5) * 1.4;
+      const speed  = Math.sqrt(ball.dx * ball.dx + ball.dy * ball.dy);
+      ball.dx = Math.sin(angle) * speed * 1.1;
+      ball.dy = -Math.abs(Math.cos(angle) * speed);
+      // Normalizar
+      const s = Math.sqrt(ball.dx*ball.dx + ball.dy*ball.dy);
+      ball.dx = (ball.dx/s) * ball.baseSpeed;
+      ball.dy = (ball.dy/s) * ball.baseSpeed;
+      createParticle(ball.x, ball.y);
+    } else if (ball.y > paddleY) {
+      lives--;
+      updateLives();
+      if (lives <= 0) {
+        gameRunning = false;
+        if (startScreen) {
+          startScreen.style.display = 'flex';
+          startScreen.innerHTML = `
+            <div class="start-emoji">💀</div>
+            <div class="start-title">GAME OVER</div>
+            <p class="start-sub" style="color:rgba(255,255,255,0.5)">Puntuación: ${score}</p>
+            <button class="btn-play" onclick="startGame()"><span>🔄</span> REINTENTAR</button>
+          `;
+        }
+        return;
+      } else {
+        ball.x  = canvas.width  / 2;
+        ball.y  = canvas.height * 0.65;
+        ball.dx = ball.baseSpeed;
+        ball.dy = -ball.baseSpeed;
+      }
+    }
+  }
+
+  // Colisiones ladrillos
+  for (let c = 0; c < brickCols; c++) {
+    for (let r = 0; r < brickRows; r++) {
+      const b = bricks[c][r];
+      if (b.status === 1) {
+        if (ball.x > b.x && ball.x < b.x + brickWidth &&
+            ball.y > b.y && ball.y < b.y + brickHeight) {
+          ball.dy = -ball.dy;
+          b.status = 0;
+          score += 10;
+          updateScore();
+          for (let i = 0; i < 5; i++) createParticle(b.x + brickWidth/2, b.y + brickHeight/2);
+          ball.baseSpeed = Math.min(4.5, ball.baseSpeed + 0.04);
+        }
+      }
+    }
+  }
+
+  // Verificar si ganó
+  const bricksLeft = bricks.flat().filter(b => b.status === 1).length;
+  if (bricksLeft === 0) {
+    initBricks();
+    ball.baseSpeed = Math.max(2.2, ball.baseSpeed - 0.3);
+    toast('🎉 ¡Ganaste! Siguiente nivel');
+  }
+
+  animationId = requestAnimationFrame(gameLoop);
+}
+
+/* ── Función helper roundRect ── */
+function roundRect(ctx, x, y, w, h, r) {
+  if (w < 2*r) r = w/2;
+  if (h < 2*r) r = h/2;
+  ctx.beginPath();
+  ctx.moveTo(x+r, y);
+  ctx.lineTo(x+w-r, y);
+  ctx.quadraticCurveTo(x+w, y,   x+w, y+r);
+  ctx.lineTo(x+w, y+h-r);
+  ctx.quadraticCurveTo(x+w, y+h, x+w-r, y+h);
+  ctx.lineTo(x+r, y+h);
+  ctx.quadraticCurveTo(x,   y+h, x,   y+h-r);
+  ctx.lineTo(x, y+r);
+  ctx.quadraticCurveTo(x,   y,   x+r, y);
+  ctx.closePath();
+}
+
+/* ── Pausa la animación cuando la pestaña queda oculta (ahorra batería) ──
+   Al volver a la pestaña se reanuda el gameLoop, porque cancelAnimationFrame
+   deja el bucle detenido y nadie volvería a lanzarlo. */
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) {
+    cancelAnimationFrame(animationId);
+  } else if (gameRunning && startScreen && startScreen.style.display === 'none') {
+    animationId = requestAnimationFrame(gameLoop);
+  }
+});
+
+/* ── Inicializar vidas al cargar ── */
+updateLives();
+</script>
+</body>
+</html>

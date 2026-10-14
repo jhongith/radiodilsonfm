@@ -1,0 +1,61 @@
+{
+  "name": "Dilson 101.9 FM",
+  "short_name": "Dilson FM",
+  "description": "Sistema de Comunicación Cuevo — 101.9 FM Bolivia",
+  "start_url": "/?utm_source=pwa",
+  "id": "/",
+  "scope": "/",
+  "display": "standalone",
+  "display_override": ["standalone", "browser"],
+  "background_color": "#07080F",
+  "theme_color": "#07080F",
+  "orientation": "any",
+  "lang": "es",
+  "dir": "ltr",
+  "categories": ["music", "entertainment"],
+
+  "icons": [
+    { "src": "icon-152.png",           "sizes": "152x152", "type": "image/png", "purpose": "any" },
+    { "src": "icon-180.png",           "sizes": "180x180", "type": "image/png", "purpose": "any" },
+    { "src": "icon-192.png",           "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icon-192-maskable.png",  "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
+    { "src": "icon-384.png",           "sizes": "384x384", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png",           "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512-maskable.png",  "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+
+  "shortcuts": [
+    {
+      "name": "Escuchar en vivo",
+      "short_name": "Play",
+      "description": "Abre la radio y empieza a escuchar",
+      "url": "/?autoplay=1&utm_source=pwa_shortcut",
+      "icons": [{ "src": "icon-192.png", "sizes": "192x192", "type": "image/png" }]
+    },
+    {
+      "name": "Enviar Dedicatoria",
+      "short_name": "Dedicatoria",
+      "description": "Envía una dedicatoria al aire",
+      "url": "/?action=dedica&utm_source=pwa_shortcut",
+      "icons": [{ "src": "icon-192.png", "sizes": "192x192", "type": "image/png" }]
+    },
+    {
+      "name": "Pedir Canción",
+      "short_name": "Pedir",
+      "description": "Solicita tu canción favorita",
+      "url": "/?action=cancion&utm_source=pwa_shortcut",
+      "icons": [{ "src": "icon-192.png", "sizes": "192x192", "type": "image/png" }]
+    }
+  ],
+
+  "share_target": {
+  "action": "/?action=share",
+  "method": "GET",
+  "enctype": "application/x-www-form-urlencoded",
+  "params": {
+    "title": "title",
+    "text": "text",
+    "url": "url"
+  }
+ }
+}

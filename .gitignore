@@ -1,0 +1,24 @@
+# ── Basura del sistema operativo ────────────────────────────────────
+Thumbs.db
+desktop.ini
+.DS_Store
+
+# ── Editores ────────────────────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+*~
+
+# ── Node (por si algún día se añade un paso de compilación) ─────────
+node_modules/
+npm-debug.log*
+yarn-error.log*
+
+# ── Netlify ─────────────────────────────────────────────────────────
+.netlify/
+
+# ── Copias y temporales ─────────────────────────────────────────────
+*.bak
+*.tmp
+*.orig
+*.log

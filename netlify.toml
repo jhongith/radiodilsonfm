@@ -1,0 +1,54 @@
+# ═══════════════════════════════════════════════════════════════════
+#  Radio Dilson 101.9 FM — configuración de Netlify
+#
+#  Este archivo declara SOLO dos cosas:
+#    · dónde están las funciones serverless
+#    · las redirecciones y el proxy del stream de audio
+#
+#  Las cabeceras de seguridad y de caché viven en el archivo `_headers`.
+#  No las dupliques aquí: Netlify da prioridad a `_headers`, y tener las
+#  dos cosas a la vez generaba reglas contradictorias (había dos
+#  Permissions-Policy distintas y ninguna forma de saber cuál se aplicaba).
+# ═══════════════════════════════════════════════════════════════════
+
+[build]
+  functions = "netlify/functions"
+
+# ── Proxy del stream de audio ──────────────────────────────────────
+# El navegador pide /radio-stream (mismo origen y por HTTPS) y Netlify lo
+# reenvía al servidor Icecast. Así se evita que el navegador bloquee el
+# audio por "contenido mixto", porque el origen real es HTTP.
+#
+# Servidor actual: Shoutcast v2 de listen2myradio.
+#   Host   : uk18freenew.listen2myradio.com   (IP 37.157.242.102)
+#   Puerto : 34784
+#   Emisión: 1        Ruta de audio: /;stream   (comprobada, 128 kbps)
+#
+# ⚠️ SI CAMBIA EL SERVIDOR DE RADIO HAY QUE TOCAR DOS SITIOS:
+#      1) esta línea
+#      2) las constantes STREAM_HOST / STREAM_PORT / STREAM_ID de
+#         netlify/functions/radio-status.js
+#    Si solo se cambia uno, el audio suena pero el "ahora suena" se queda
+#    congelado (o al contrario). Antes había cuatro direcciones distintas
+#    en el proyecto; ahora son estas dos y deben decir lo mismo.
+[[redirects]]
+  from   = "/radio-stream"
+  to     = "http://uk18freenew.listen2myradio.com:34784/;stream"
+  status = 200
+  force  = true
+
+# ── Estado de la radio (canción actual y oyentes) ──────────────────
+[[redirects]]
+  from   = "/api/radio-status"
+  to     = "/.netlify/functions/radio-status"
+  status = 200
+  force  = true
+
+# ── Subida de imágenes a imgBB ────────────────────────────────────
+# La clave de imgBB ya no viaja en el navegador: vive en la variable de
+# entorno IMGBB_KEY del sitio y solo la usa esta función.
+[[redirects]]
+  from   = "/api/imgbb-upload"
+  to     = "/.netlify/functions/imgbb-upload"
+  status = 200
+  force  = true
