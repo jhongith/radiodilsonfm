@@ -18,9 +18,9 @@
   --blue-border: rgba(168,85,247,0.22);
 
   /* ── Acento secundario: mantiene el dorado para identidad Dilson ── */
-  --gold:    #F5C842;
-  --goldlt:  #FFE580;
-  --golddm:  #C9A22A;
+  --gold:    #A855F7;
+  --goldlt:  #D8B4FE;
+  --golddm:  #7C3AED;
 
   /* ── Estado / semántica ── */
   --red:     #FF3B30;
@@ -2184,3 +2184,28 @@ input[type=range]::-webkit-slider-thumb {
    existe :active). Añadirlas habría anulado el feedback táctil de
    :active, porque :hover y :active empatan en especificidad y una regla
    de :hover colocada después ganaría. */
+
+/* ══════════════════════════════════════════════════════════════════
+   TARJETA DEL TOP DE CANCIONES
+   ══════════════════════════════════════════════════════════════════
+   Esta lista salió de dentro de la tarjeta del reproductor porque le
+   robaba espacio a los controles de play/pausa. Ahora es una tarjeta
+   hermana de la del locutor y la del clima, así que necesita su propio
+   fondo y su borde: antes se apoyaba en el cristal de la tarjeta del
+   reproductor y, sin él, quedaba como un bloque suelto sobre el fondo. */
+.ranking-panel {
+  padding: 14px 16px 16px;
+  margin: 12px 0 0;
+  border-radius: var(--r-lg);
+  background: rgba(255,255,255,0.05);
+  border: 0.5px solid var(--glass-border);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 6px 24px rgba(0,0,0,0.25);
+}
+.ranking-panel::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(168,85,247,0.45), transparent);
+}

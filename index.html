@@ -326,17 +326,6 @@
         </div>
       </div>
 
-      <!-- Ranking canciones pedidas -->
-      <div class="ranking-panel" id="rankingPanel" role="region" aria-label="Top canciones pedidas">
-        <div class="ranking-header">
-          <span class="ranking-title">🏆 Top Canciones Pedidas</span>
-          <span class="ranking-period" id="rankingPeriod">esta semana</span>
-        </div>
-        <div class="ranking-list" id="rankingList">
-          <div class="ranking-empty">Sé el primero en pedir 🎵</div>
-        </div>
-      </div>
-
       <!-- Ticker -->
       <div class="ticker" aria-hidden="true">
         <span class="tick-inner" id="ticker">▶ EN VIVO ▶ RADIO DILSON 101.9 FM ▶ CUEVO, SANTA CRUZ · BOLIVIA ▶ TRANSMISIÓN 24/7 ▶ SEÑAL DIGITAL ▶ &nbsp;&nbsp;&nbsp; ▶ EN VIVO ▶ RADIO DILSON 101.9 FM ▶ CUEVO, SANTA CRUZ · BOLIVIA ▶ TRANSMISIÓN 24/7 ▶ SEÑAL DIGITAL ▶</span>
@@ -370,6 +359,18 @@
         <div class="stat"><span class="sv" id="statListeners">--</span><span class="sl">🎧 Oyentes</span></div>
         <div class="sdiv" aria-hidden="true"></div>
         <div class="stat"><span class="sv">101.9</span><span class="sl">MHz FM</span></div>
+      </div>
+    </div>
+
+    <!-- Top de canciones pedidas — FUERA de la tarjeta del reproductor.
+         Antes iba dentro y le robaba espacio a los controles de play/pausa. -->
+    <div class="ranking-panel" id="rankingPanel" role="region" aria-label="Top canciones pedidas">
+      <div class="ranking-header">
+        <span class="ranking-title">🏆 Top Canciones Pedidas</span>
+        <span class="ranking-period" id="rankingPeriod">esta semana</span>
+      </div>
+      <div class="ranking-list" id="rankingList">
+        <div class="ranking-empty">Sé el primero en pedir 🎵</div>
       </div>
     </div>
 

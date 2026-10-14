@@ -25,11 +25,11 @@
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 
 :root{
-  --gold:#f5c842;--gold2:#ffe680;--gold3:rgba(245,200,66,.16);--gold4:rgba(245,200,66,.06);
-  --bg:#04030c;--bg2:#08071a;--bg3:#0e0c24;
+  --gold:#A855F7;--gold2:#ffe680;--gold3:rgba(168,85,247,.16);--gold4:rgba(168,85,247,.06);
+  --bg:#04000E;--bg2:#08071a;--bg3:#0e0c24;
   --text:#f2eeff;--muted:rgba(242,238,255,.72);
   --red:#ff2d55;--green:#00e5a0;--cyan:#00d4ff;
-  --border:rgba(245,200,66,.18);--border2:rgba(245,200,66,.08);
+  --border:rgba(168,85,247,.18);--border2:rgba(168,85,247,.08);
 }
 
 html,body{min-height:100vh;background:var(--bg);color:var(--text);
@@ -47,7 +47,7 @@ html,body{min-height:100vh;background:var(--bg);color:var(--text);
 
 .splash-logo-wrap{position:relative;width:100px;height:100px}
 .splash-ring{
-  position:absolute;border-radius:50%;border:1.5px solid rgba(245,200,66,.25);
+  position:absolute;border-radius:50%;border:1.5px solid rgba(168,85,247,.25);
   top:50%;left:50%;transform:translate(-50%,-50%) scale(0);
   animation:splashRing 2s ease-out infinite;
 }
@@ -60,8 +60,8 @@ html,body{min-height:100vh;background:var(--bg);color:var(--text);
 }
 .splash-img{
   width:100px;height:100px;border-radius:50%;object-fit:cover;
-  border:2px solid rgba(245,200,66,.5);
-  box-shadow:0 0 40px rgba(245,200,66,.3);
+  border:2px solid rgba(168,85,247,.5);
+  box-shadow:0 0 40px rgba(168,85,247,.3);
   position:relative;z-index:1;
   animation:splashImgIn .8s cubic-bezier(.16,1,.3,1) .2s both;
 }
@@ -69,7 +69,7 @@ html,body{min-height:100vh;background:var(--bg);color:var(--text);
 
 .splash-title{
   font-family:'Bebas Neue',sans-serif;font-size:2.4rem;letter-spacing:6px;
-  color:var(--gold);text-shadow:0 0 40px rgba(245,200,66,.5);
+  color:var(--gold);text-shadow:0 0 40px rgba(168,85,247,.5);
   animation:splashImgIn .8s cubic-bezier(.16,1,.3,1) .4s both;
 }
 .splash-sub{
@@ -91,7 +91,7 @@ html,body{min-height:100vh;background:var(--bg);color:var(--text);
 .bg-mesh{
   position:fixed;inset:0;z-index:0;pointer-events:none;
   background:
-    radial-gradient(ellipse 90% 55% at 5% 95%,rgba(245,200,66,.1) 0%,transparent 55%),
+    radial-gradient(ellipse 90% 55% at 5% 95%,rgba(168,85,247,.1) 0%,transparent 55%),
     radial-gradient(ellipse 60% 45% at 95% 5%,rgba(0,212,255,.07) 0%,transparent 55%),
     radial-gradient(ellipse 70% 70% at 50% 50%,rgba(255,45,85,.04) 0%,transparent 65%);
 }
@@ -102,15 +102,15 @@ html,body{min-height:100vh;background:var(--bg);color:var(--text);
 }
 .grid-bg{
   position:fixed;inset:0;z-index:0;pointer-events:none;
-  background-image:linear-gradient(rgba(245,200,66,.025) 1px,transparent 1px),
-    linear-gradient(90deg,rgba(245,200,66,.025) 1px,transparent 1px);
+  background-image:linear-gradient(rgba(168,85,247,.025) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(168,85,247,.025) 1px,transparent 1px);
   background-size:48px 48px;
   mask-image:radial-gradient(ellipse 80% 70% at 50% 50%,black 20%,transparent 100%);
 }
 /* Horizontal scan */
 .scan{
   position:fixed;left:0;right:0;height:2px;z-index:1;pointer-events:none;
-  background:linear-gradient(90deg,transparent,rgba(245,200,66,.6),transparent);
+  background:linear-gradient(90deg,transparent,rgba(168,85,247,.6),transparent);
   animation:scanLine 11s linear infinite;
 }
 @keyframes scanLine{0%{top:-2px;opacity:0}4%{opacity:1}96%{opacity:.5}100%{top:100vh;opacity:0}}
@@ -141,23 +141,23 @@ main{position:relative;z-index:2;max-width:460px;margin:0 auto;padding:0 18px 80
 .logo-wrap{position:relative;width:116px;height:116px;margin:0 auto 20px}
 .logo-halo{
   position:absolute;inset:-20px;border-radius:50%;
-  background:radial-gradient(ellipse,rgba(245,200,66,.2) 0%,transparent 65%);
+  background:radial-gradient(ellipse,rgba(168,85,247,.2) 0%,transparent 65%);
   animation:haloPulse 3.5s ease infinite;
 }
 @keyframes haloPulse{0%,100%{opacity:.6;transform:scale(1)}50%{opacity:1;transform:scale(1.12)}}
-.logo-ring-a{position:absolute;inset:-14px;border-radius:50%;border:1.5px solid rgba(245,200,66,.2);animation:ringRot 16s linear infinite}
-.logo-ring-b{position:absolute;inset:-5px;border-radius:50%;border:1px dashed rgba(245,200,66,.3);animation:ringRot 10s linear infinite reverse}
+.logo-ring-a{position:absolute;inset:-14px;border-radius:50%;border:1.5px solid rgba(168,85,247,.2);animation:ringRot 16s linear infinite}
+.logo-ring-b{position:absolute;inset:-5px;border-radius:50%;border:1px dashed rgba(168,85,247,.3);animation:ringRot 10s linear infinite reverse}
 @keyframes ringRot{to{transform:rotate(360deg)}}
 .logo-img{
   width:116px;height:116px;border-radius:50%;object-fit:cover;
-  border:2.5px solid rgba(245,200,66,.55);
-  box-shadow:0 0 0 7px rgba(245,200,66,.05),0 20px 60px rgba(245,200,66,.2);
+  border:2.5px solid rgba(168,85,247,.55);
+  box-shadow:0 0 0 7px rgba(168,85,247,.05),0 20px 60px rgba(168,85,247,.2);
   position:relative;z-index:1;display:block;
 }
 
 .station-name{
   font-family:'Bebas Neue',sans-serif;font-size:3rem;letter-spacing:5px;
-  color:var(--gold);text-shadow:0 0 60px rgba(245,200,66,.45),0 0 20px rgba(245,200,66,.2);
+  color:var(--gold);text-shadow:0 0 60px rgba(168,85,247,.45),0 0 20px rgba(168,85,247,.2);
   line-height:1;margin-bottom:8px;
 }
 .station-sub{
@@ -171,14 +171,14 @@ main{position:relative;z-index:2;max-width:460px;margin:0 auto;padding:0 18px 80
 ═══════════════════════════════════════ */
 .player-card{
   background:linear-gradient(145deg,rgba(14,12,36,.98),rgba(6,5,16,.99));
-  border:1px solid rgba(245,200,66,.2);border-radius:28px;padding:20px;
+  border:1px solid rgba(168,85,247,.2);border-radius:28px;padding:20px;
   margin-bottom:14px;position:relative;overflow:hidden;
   animation:fadeUp .8s cubic-bezier(.16,1,.3,1) .12s both;
-  box-shadow:0 24px 70px rgba(0,0,0,.55),inset 0 1px 0 rgba(245,200,66,.1);
+  box-shadow:0 24px 70px rgba(0,0,0,.55),inset 0 1px 0 rgba(168,85,247,.1);
 }
 .player-card::before{
   content:'';position:absolute;top:0;left:6%;right:6%;height:1px;
-  background:linear-gradient(90deg,transparent,rgba(245,200,66,.55),transparent);
+  background:linear-gradient(90deg,transparent,rgba(168,85,247,.55),transparent);
 }
 
 /* Canvas visualizer */
@@ -191,12 +191,12 @@ main{position:relative;z-index:2;max-width:460px;margin:0 auto;padding:0 18px 80
 .now-playing{display:flex;align-items:center;gap:14px;margin-bottom:14px}
 .np-icon{
   width:52px;height:52px;border-radius:16px;
-  background:linear-gradient(135deg,rgba(245,200,66,.15),rgba(245,200,66,.04));
-  border:1px solid rgba(245,200,66,.18);
+  background:linear-gradient(135deg,rgba(168,85,247,.15),rgba(168,85,247,.04));
+  border:1px solid rgba(168,85,247,.18);
   display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0;
   animation:npGlow 3.5s ease infinite;
 }
-@keyframes npGlow{0%,100%{box-shadow:0 0 0 0 rgba(245,200,66,.2)}50%{box-shadow:0 0 0 10px rgba(245,200,66,0)}}
+@keyframes npGlow{0%,100%{box-shadow:0 0 0 0 rgba(168,85,247,.2)}50%{box-shadow:0 0 0 10px rgba(168,85,247,0)}}
 .np-info{flex:1;min-width:0}
 .np-label{font-size:.58rem;letter-spacing:2.5px;color:var(--gold);text-transform:uppercase;margin-bottom:3px;font-weight:700}
 .np-title{font-family:'Rajdhani',sans-serif;font-size:1.05rem;font-weight:700;color:var(--text);
@@ -213,18 +213,18 @@ main{position:relative;z-index:2;max-width:460px;margin:0 auto;padding:0 18px 80
 }
 .vol-slider::-webkit-slider-thumb{
   -webkit-appearance:none;width:14px;height:14px;border-radius:50%;
-  background:var(--gold);box-shadow:0 0 8px rgba(245,200,66,.5);cursor:pointer;
+  background:var(--gold);box-shadow:0 0 8px rgba(168,85,247,.5);cursor:pointer;
 }
 
 .play-btn{
   flex:1;height:54px;border-radius:16px;border:none;
-  background:linear-gradient(135deg,#f5c842,#d4a020);color:#06050a;
+  background:linear-gradient(135deg,#A855F7,#d4a020);color:#06050a;
   font-family:'Bebas Neue',sans-serif;font-size:1.2rem;letter-spacing:4px;cursor:pointer;
   display:flex;align-items:center;justify-content:center;gap:10px;
-  box-shadow:0 10px 35px rgba(245,200,66,.4);
+  box-shadow:0 10px 35px rgba(168,85,247,.4);
   transition:transform .15s,box-shadow .15s;position:relative;overflow:hidden;
 }
-.play-btn:hover{transform:translateY(-1px);box-shadow:0 14px 45px rgba(245,200,66,.55)}
+.play-btn:hover{transform:translateY(-1px);box-shadow:0 14px 45px rgba(168,85,247,.55)}
 .play-btn:active{transform:scale(.97)}
 .play-btn.playing{background:linear-gradient(135deg,#ff2d55,#cc0033);color:#fff;box-shadow:0 10px 35px rgba(255,45,85,.4)}
 .play-btn-icon{font-size:1.4rem}
@@ -276,21 +276,21 @@ main{position:relative;z-index:2;max-width:460px;margin:0 auto;padding:0 18px 80
    INSTALL CARD
 ═══════════════════════════════════════ */
 .install-card{
-  background:linear-gradient(145deg,rgba(245,200,66,.09),rgba(245,200,66,.02));
-  border:1.5px solid rgba(245,200,66,.35);border-radius:28px;padding:22px;
+  background:linear-gradient(145deg,rgba(168,85,247,.09),rgba(168,85,247,.02));
+  border:1.5px solid rgba(168,85,247,.35);border-radius:28px;padding:22px;
   margin-bottom:14px;position:relative;overflow:hidden;
   animation:fadeUp .8s cubic-bezier(.16,1,.3,1) .3s both;
-  box-shadow:0 20px 60px rgba(0,0,0,.4),inset 0 1px 0 rgba(245,200,66,.12);
+  box-shadow:0 20px 60px rgba(0,0,0,.4),inset 0 1px 0 rgba(168,85,247,.12);
 }
 .install-card::before{
   content:'';position:absolute;top:0;left:5%;right:5%;height:1px;
-  background:linear-gradient(90deg,transparent,rgba(245,200,66,.7),transparent);
+  background:linear-gradient(90deg,transparent,rgba(168,85,247,.7),transparent);
 }
 .install-header{display:flex;align-items:center;gap:12px;margin-bottom:10px}
 .install-icon{
   width:48px;height:48px;border-radius:14px;
-  background:linear-gradient(135deg,rgba(245,200,66,.2),rgba(245,200,66,.06));
-  border:1px solid rgba(245,200,66,.3);
+  background:linear-gradient(135deg,rgba(168,85,247,.2),rgba(168,85,247,.06));
+  border:1px solid rgba(168,85,247,.3);
   display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0;
 }
 .install-title{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:3px;color:var(--gold);line-height:1}
@@ -303,24 +303,24 @@ main{position:relative;z-index:2;max-width:460px;margin:0 auto;padding:0 18px 80
   background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);
   border-radius:12px;padding:9px 11px;transition:border-color .2s,background .2s;
 }
-.feat:hover{border-color:rgba(245,200,66,.22);background:rgba(245,200,66,.04)}
+.feat:hover{border-color:rgba(168,85,247,.22);background:rgba(168,85,247,.04)}
 .feat-icon{font-size:1rem;flex-shrink:0}
 
 /* CTA BUTTON */
 .install-btn{
   width:100%;height:60px;border-radius:18px;border:none;
-  background:linear-gradient(135deg,#f5c842 0%,#e0a810 50%,#f5d060 100%);
+  background:linear-gradient(135deg,#A855F7 0%,#e0a810 50%,#f5d060 100%);
   background-size:200% auto;color:#050408;
   font-family:'Bebas Neue',sans-serif;font-size:1.3rem;letter-spacing:4px;
   cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;
-  box-shadow:0 14px 45px rgba(245,200,66,.5),0 4px 14px rgba(245,200,66,.25),inset 0 1px 0 rgba(255,255,255,.3);
+  box-shadow:0 14px 45px rgba(168,85,247,.5),0 4px 14px rgba(168,85,247,.25),inset 0 1px 0 rgba(255,255,255,.3);
   transition:transform .15s,box-shadow .15s,background-position .4s;
   margin-bottom:12px;position:relative;overflow:hidden;
   animation:ctaPulse 2.5s ease infinite;
 }
 @keyframes ctaPulse{
-  0%,100%{box-shadow:0 14px 45px rgba(245,200,66,.5),0 4px 14px rgba(245,200,66,.25)}
-  50%{box-shadow:0 18px 60px rgba(245,200,66,.7),0 6px 22px rgba(245,200,66,.4)}
+  0%,100%{box-shadow:0 14px 45px rgba(168,85,247,.5),0 4px 14px rgba(168,85,247,.25)}
+  50%{box-shadow:0 18px 60px rgba(168,85,247,.7),0 6px 22px rgba(168,85,247,.4)}
 }
 .install-btn::before{
   content:'';position:absolute;top:0;left:-100%;width:55%;height:100%;
@@ -328,7 +328,7 @@ main{position:relative;z-index:2;max-width:460px;margin:0 auto;padding:0 18px 80
   animation:shimmer 3.5s ease infinite 1.5s;
 }
 @keyframes shimmer{0%{left:-100%}60%,100%{left:160%}}
-.install-btn:hover{transform:translateY(-2px);background-position:right center;box-shadow:0 20px 60px rgba(245,200,66,.7)}
+.install-btn:hover{transform:translateY(-2px);background-position:right center;box-shadow:0 20px 60px rgba(168,85,247,.7)}
 .install-btn:active{transform:scale(.97)}
 .install-btn:disabled{opacity:.6;cursor:default;animation:none}
 
@@ -347,8 +347,8 @@ main{position:relative;z-index:2;max-width:460px;margin:0 auto;padding:0 18px 80
 .install-step:last-child{border-bottom:none}
 .step-num{
   width:24px;height:24px;border-radius:50%;
-  background:linear-gradient(135deg,rgba(245,200,66,.2),rgba(245,200,66,.05));
-  border:1px solid rgba(245,200,66,.3);
+  background:linear-gradient(135deg,rgba(168,85,247,.2),rgba(168,85,247,.05));
+  border:1px solid rgba(168,85,247,.3);
   display:flex;align-items:center;justify-content:center;
   font-size:.65rem;font-weight:700;color:var(--gold);flex-shrink:0;margin-top:1px;
 }
@@ -375,10 +375,10 @@ main{position:relative;z-index:2;max-width:460px;margin:0 auto;padding:0 18px 80
 /* Phone mockup */
 .phone-mockup{
   width:220px;height:380px;border-radius:36px;
-  border:2.5px solid rgba(245,200,66,.4);
+  border:2.5px solid rgba(168,85,247,.4);
   background:linear-gradient(160deg,#0e0c24,#060414);
   position:relative;overflow:hidden;margin-bottom:28px;
-  box-shadow:0 30px 80px rgba(0,0,0,.7),0 0 0 1px rgba(245,200,66,.06);
+  box-shadow:0 30px 80px rgba(0,0,0,.7),0 0 0 1px rgba(168,85,247,.06);
 }
 .phone-mockup::before{
   content:'';position:absolute;top:10px;left:50%;transform:translateX(-50%);
@@ -387,10 +387,10 @@ main{position:relative;z-index:2;max-width:460px;margin:0 auto;padding:0 18px 80
 .phone-screen{padding:28px 14px 14px;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:8px}
 .phone-app-icon{
   width:62px;height:62px;border-radius:16px;
-  background:linear-gradient(135deg,rgba(245,200,66,.25),rgba(245,200,66,.08));
-  border:1.5px solid rgba(245,200,66,.3);
+  background:linear-gradient(135deg,rgba(168,85,247,.25),rgba(168,85,247,.08));
+  border:1.5px solid rgba(168,85,247,.3);
   display:flex;align-items:center;justify-content:center;font-size:1.8rem;
-  box-shadow:0 8px 24px rgba(245,200,66,.2);
+  box-shadow:0 8px 24px rgba(168,85,247,.2);
 }
 .phone-app-name{font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:2px;color:var(--gold);margin-top:4px}
 .phone-app-sub{font-size:.6rem;color:var(--muted);letter-spacing:1px}
@@ -443,7 +443,7 @@ main{position:relative;z-index:2;max-width:460px;margin:0 auto;padding:0 18px 80
 @keyframes dedSlide{from{opacity:0;transform:translateX(-12px)}to{opacity:1;transform:none}}
 .dedic-avatar{
   width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--gold3),rgba(255,255,255,.05));
-  border:1.5px solid rgba(245,200,66,.25);display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;
+  border:1.5px solid rgba(168,85,247,.25);display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;
 }
 .dedic-body{flex:1;min-width:0}
 .dedic-from{font-size:.72rem;color:var(--gold);font-weight:700;margin-bottom:2px}
@@ -462,7 +462,7 @@ main{position:relative;z-index:2;max-width:460px;margin:0 auto;padding:0 18px 80
   border:1px solid rgba(255,255,255,.06);border-radius:20px;padding:18px 15px;
   transition:border-color .25s,transform .25s,box-shadow .25s;cursor:default;position:relative;overflow:hidden;
 }
-.feature-card:hover{border-color:rgba(245,200,66,.28);transform:translateY(-3px);box-shadow:0 14px 35px rgba(0,0,0,.4)}
+.feature-card:hover{border-color:rgba(168,85,247,.28);transform:translateY(-3px);box-shadow:0 14px 35px rgba(0,0,0,.4)}
 .fc-icon{font-size:1.55rem;margin-bottom:9px}
 .fc-title{font-family:'Rajdhani',sans-serif;font-size:.9rem;font-weight:700;color:var(--text);margin-bottom:4px;letter-spacing:.5px}
 .fc-desc{font-size:.66rem;color:var(--muted);line-height:1.45}
@@ -491,8 +491,8 @@ main{position:relative;z-index:2;max-width:460px;margin:0 auto;padding:0 18px 80
 .share-btn.fb:hover{border-color:rgba(66,103,178,.4);background:rgba(66,103,178,.06)}
 .share-btn.tw{border-color:rgba(29,161,242,.2)}
 .share-btn.tw:hover{border-color:rgba(29,161,242,.4);background:rgba(29,161,242,.06)}
-.share-btn.copy{border-color:rgba(245,200,66,.2)}
-.share-btn.copy:hover{border-color:rgba(245,200,66,.4);background:rgba(245,200,66,.06)}
+.share-btn.copy{border-color:rgba(168,85,247,.2)}
+.share-btn.copy:hover{border-color:rgba(168,85,247,.4);background:rgba(168,85,247,.06)}
 
 /* QR section */
 .qr-wrap{
@@ -516,7 +516,7 @@ main{position:relative;z-index:2;max-width:460px;margin:0 auto;padding:0 18px 80
 
 .lp-toast{
   position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(20px);
-  background:rgba(14,12,28,.97);border:1px solid rgba(245,200,66,.22);
+  background:rgba(14,12,28,.97);border:1px solid rgba(168,85,247,.22);
   border-radius:16px;padding:13px 22px;font-size:.83rem;color:var(--text);
   z-index:999;opacity:0;transition:opacity .3s,transform .3s;
   white-space:nowrap;pointer-events:none;
@@ -714,7 +714,7 @@ main{position:relative;z-index:2;max-width:460px;margin:0 auto;padding:0 18px 80
       <div class="qr-info">
         <div class="qr-title">📱 Escanea el código QR</div>
         <div class="qr-sub">Comparte en grupos de WhatsApp, redes sociales o imprímelo para que todos puedan instalar Radio Dilson.</div>
-        <button onclick="downloadQR()" style="margin-top:8px;background:rgba(245,200,66,.12);border:1px solid rgba(245,200,66,.3);border-radius:8px;padding:5px 12px;color:var(--gold);font-family:'Rajdhani',sans-serif;font-weight:700;font-size:.7rem;letter-spacing:1.5px;cursor:pointer;text-transform:uppercase">⬇ Descargar QR</button>
+        <button onclick="downloadQR()" style="margin-top:8px;background:rgba(168,85,247,.12);border:1px solid rgba(168,85,247,.3);border-radius:8px;padding:5px 12px;color:var(--gold);font-family:'Rajdhani',sans-serif;font-weight:700;font-size:.7rem;letter-spacing:1.5px;cursor:pointer;text-transform:uppercase">⬇ Descargar QR</button>
       </div>
     </div>
   </div>
@@ -924,7 +924,7 @@ function drawIdleViz() {
     for (let i = 0; i < bars; i++) {
       const amp = 0.08 + 0.08 * Math.sin(t + i * 0.4) + 0.04 * Math.sin(t * 1.7 + i * 0.7);
       const barH = amp * H;
-      ctx.fillStyle = `rgba(245,200,66,${0.15 + amp * 1.5})`;
+      ctx.fillStyle = `rgba(168,85,247,${0.15 + amp * 1.5})`;
       ctx.beginPath();
       ctx.roundRect(i * barW + 1, H - barH, barW - 2, barH, 2);
       ctx.fill();
@@ -1070,7 +1070,7 @@ function initQR() {
     text: 'https://onlineradiodilson101cuevo.netlify.app/instalar',
     width: 80,
     height: 80,
-    colorDark: '#04030c',
+    colorDark: '#04000E',
     colorLight: '#ffffff',
     correctLevel: QRCode.CorrectLevel.H
   });

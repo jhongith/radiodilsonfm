@@ -445,19 +445,12 @@ let vizFreqData  = null;
 let vizConnected = false;
 
 /* ── Ajustes del visualizador (barras y ondas) ──────────────────────
-   La señal del analizador ya viene normalizada de 0 a 1. Antes se
-   multiplicaba por 2.0 y ADEMÁS por un refuerzo central de hasta 1.4, es
-   decir hasta 2.8 veces: todo lo que pasaba de 0.36 se recortaba a 1, así
-   que las barras se quedaban pegadas arriba y parecían no moverse. Solo
-   reaccionaban al bajar el volumen, porque eso reduce la señal antes de
-   llegar al analizador.
-
-   Ahora cada banda se mide contra su propio máximo reciente, que baja poco
-   a poco. El dibujo se mueve igual con el volumen alto o bajo. */
-const VIZ_REF_MIN   = 0.26;   // referencia mínima por banda (no amplifica el silencio)
-const VIZ_REF_CAIDA = 0.975;  // cuánto baja la referencia en cada fotograma
-const VIZ_CURVA     = 1.25;   // >1 da más contraste: los picos destacan
-let   vizRefBandas  = null;   // referencia móvil por banda
+   Además del rango de decibelios de arriba, cada fotograma se normaliza
+   contra su propio máximo y su propio mínimo. Así el dibujo aprovecha todo
+   su recorrido tanto con el volumen alto como bajo, y no depende de lo
+   fuerte que llegue la señal. */
+const VIZ_CONTRASTE       = 1.25;  // >1 da más contraste: los picos destacan
+const VIZ_PUERTA_SILENCIO = 0.35;  // por debajo de esto se considera silencio
 
 function connectAudioAnalyser() {
   if (vizConnected) {
@@ -482,7 +475,18 @@ function connectAudioAnalyser() {
     }
     vizAnalyser = vizAudioCtx.createAnalyser();
     vizAnalyser.fftSize = 1024;
-    vizAnalyser.smoothingTimeConstant = 0.72;
+    /* ── Rango de decibelios: LA CAUSA REAL DE QUE NO SE MOVIERAN ────────
+       Por defecto el analizador mide de -100 a -30 dB. La música tiene casi
+       toda su energía POR ENCIMA de -30 dB, así que prácticamente todas las
+       bandas devolvían el valor máximo (255) y las barras se quedaban
+       clavadas arriba. Al bajar el volumen la señal entraba más floja y de
+       ahí que "revivieran".
+
+       Con este rango (-85 a -10 dB) los valores se reparten por todo el
+       recorrido y hay movimiento real en todo el espectro. */
+    vizAnalyser.minDecibels = -85;
+    vizAnalyser.maxDecibels = -10;
+    vizAnalyser.smoothingTimeConstant = 0.75;
     vizFreqData = new Uint8Array(vizAnalyser.frequencyBinCount);
     vizSource   = vizAudioCtx.createMediaElementSource(audio);
     vizSource.connect(vizAnalyser);
@@ -504,31 +508,43 @@ function getFreqBands(n) {
   if (vizConnected && vizAnalyser && playing) {
     vizAnalyser.getByteFrequencyData(vizFreqData);
     const bins = vizFreqData.length;
+    const limite = Math.min(bins - 1, 140); // solo se usan los graves/medios útiles
 
-    if (!vizRefBandas || vizRefBandas.length !== n) vizRefBandas = new Float32Array(n);
+    /* ── Nivel del fotograma ─────────────────────────────────────────
+       Se busca el valor más alto y el más bajo AHORA MISMO y se normaliza
+       contra ellos. Es lo que hace que el dibujo se mueva igual con el
+       volumen alto o bajo, en vez de quedarse pegado arriba. */
+    let maxBin = 0, minBin = 255;
+    for (let k = 0; k <= limite; k++) {
+      const v = vizFreqData[k];
+      if (v > maxBin) maxBin = v;
+      if (v < minBin) minBin = v;
+    }
+    const rango = Math.max(24, maxBin - minBin); // nunca dividir por casi cero
+
+    /* Puerta de silencio: si no hay señal, las barras bajan solas en lugar
+       de amplificar el ruido de fondo. */
+    const fuerza = Math.min(1, (maxBin / 255) / VIZ_PUERTA_SILENCIO);
 
     for (let i = 0; i < n; i++) {
       const p = i / n;
-      const binIdx = Math.floor(Math.pow(p, 0.45) * Math.min(bins - 1, 140));
+      const binIdx = Math.floor(Math.pow(p, 0.45) * limite);
       const v0 = vizFreqData[Math.max(0, binIdx - 1)] / 255;
       const v1 = vizFreqData[binIdx] / 255;
       const v2 = vizFreqData[Math.min(bins - 1, binIdx + 1)] / 255;
-      const crudo = v0 * 0.2 + v1 * 0.6 + v2 * 0.2;
+      const crudo255 = (v0 * 0.2 + v1 * 0.6 + v2 * 0.2) * 255;
 
-      /* Auto-nivel: la referencia de esta banda sube de golpe con el pico y
-         baja despacio. Al dividir por ella, la altura depende de cuánto
-         sube AHORA respecto a su propio máximo, no del volumen general. */
-      const refPrevia = vizRefBandas[i] || VIZ_REF_MIN;
-      vizRefBandas[i] = Math.max(crudo, refPrevia * VIZ_REF_CAIDA, VIZ_REF_MIN);
-
-      const real = Math.min(1, Math.pow(crudo / vizRefBandas[i], VIZ_CURVA));
+      let real = ((crudo255 - minBin) / rango) * fuerza;
+      if (real < 0) real = 0;
+      else if (real > 1) real = 1;
+      real = Math.pow(real, VIZ_CONTRASTE); // más contraste entre picos y resto
 
       /* Movimiento de fondo muy suave para que no parezca muerto en los
-         pasajes tranquilos. Antes era bastante más alto y contribuía a que
-         todo se viera lleno: ahora se nota solo cuando la señal es baja. */
+         pasajes tranquilos. Antes era mucho más alto y contribuía a que todo
+         se viera lleno: ahora solo se nota cuando la señal es baja. */
       const floor1 = Math.sin(t * 1.8 + p * 5.1) * 0.5 + 0.5;
       const floor2 = Math.sin(t * 3.2 + p * 8.4) * 0.5 + 0.5;
-      const idle = (floor1 * 0.6 + floor2 * 0.4) * (0.06 + 0.05 * Math.sin(p * Math.PI));
+      const idle = (floor1 * 0.6 + floor2 * 0.4) * (0.05 + 0.04 * Math.sin(p * Math.PI));
 
       result[i] = Math.min(1, real + idle * Math.max(0, 1 - real * 3));
     }
@@ -4362,8 +4378,18 @@ function initComunicados() {
     if (list.length === 0) {
       sliderEl.innerHTML = '<div class="com-empty-slide">📡 Sin comunicados activos</div>';
       navEl && (navEl.style.display = 'none');
+      /* Sin comunicados no se muestra la sección: ocupaba sitio arriba del
+         reproductor para no decir nada. Reaparece sola en cuanto el locutor
+         publique el primero. */
+      const secVacia = document.getElementById('secComunicados');
+      if (secVacia) secVacia.style.display = 'none';
       return;
     }
+
+    /* Hay comunicados: garantizar que la sección se vea (pudo ocultarse
+       antes, cuando la lista estaba vacía). */
+    const secConDatos = document.getElementById('secComunicados');
+    if (secConDatos) secConDatos.style.display = '';
 
     sliderEl.innerHTML = list.map((c, i) => _buildSlide(c, i)).join('');
 
