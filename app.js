@@ -444,6 +444,21 @@ let vizSource    = null;
 let vizFreqData  = null;
 let vizConnected = false;
 
+/* ── Ajustes del visualizador (barras y ondas) ──────────────────────
+   La señal del analizador ya viene normalizada de 0 a 1. Antes se
+   multiplicaba por 2.0 y ADEMÁS por un refuerzo central de hasta 1.4, es
+   decir hasta 2.8 veces: todo lo que pasaba de 0.36 se recortaba a 1, así
+   que las barras se quedaban pegadas arriba y parecían no moverse. Solo
+   reaccionaban al bajar el volumen, porque eso reduce la señal antes de
+   llegar al analizador.
+
+   Ahora cada banda se mide contra su propio máximo reciente, que baja poco
+   a poco. El dibujo se mueve igual con el volumen alto o bajo. */
+const VIZ_REF_MIN   = 0.26;   // referencia mínima por banda (no amplifica el silencio)
+const VIZ_REF_CAIDA = 0.975;  // cuánto baja la referencia en cada fotograma
+const VIZ_CURVA     = 1.25;   // >1 da más contraste: los picos destacan
+let   vizRefBandas  = null;   // referencia móvil por banda
+
 function connectAudioAnalyser() {
   if (vizConnected) {
     // ✅ FIX: Si ya está conectado pero el contexto está suspendido, reanudarlo
@@ -489,25 +504,33 @@ function getFreqBands(n) {
   if (vizConnected && vizAnalyser && playing) {
     vizAnalyser.getByteFrequencyData(vizFreqData);
     const bins = vizFreqData.length;
+
+    if (!vizRefBandas || vizRefBandas.length !== n) vizRefBandas = new Float32Array(n);
+
     for (let i = 0; i < n; i++) {
       const p = i / n;
       const binIdx = Math.floor(Math.pow(p, 0.45) * Math.min(bins - 1, 140));
       const v0 = vizFreqData[Math.max(0, binIdx - 1)] / 255;
       const v1 = vizFreqData[binIdx] / 255;
-      const v2 = vizFreqData[Math.min(bins-1, binIdx+1)] / 255;
-      const centerBoost = 1 + 0.4 * Math.sin(p * Math.PI);
-      const real = Math.min(1, (v0*0.2 + v1*0.6 + v2*0.2) * 2.0 * centerBoost);
+      const v2 = vizFreqData[Math.min(bins - 1, binIdx + 1)] / 255;
+      const crudo = v0 * 0.2 + v1 * 0.6 + v2 * 0.2;
 
-      // ── Capa base de relleno (idle floor) para que las ondas nunca se vean ralas
-      // Se mezcla con la señal real: si la señal real es alta, el floor casi no se nota
+      /* Auto-nivel: la referencia de esta banda sube de golpe con el pico y
+         baja despacio. Al dividir por ella, la altura depende de cuánto
+         sube AHORA respecto a su propio máximo, no del volumen general. */
+      const refPrevia = vizRefBandas[i] || VIZ_REF_MIN;
+      vizRefBandas[i] = Math.max(crudo, refPrevia * VIZ_REF_CAIDA, VIZ_REF_MIN);
+
+      const real = Math.min(1, Math.pow(crudo / vizRefBandas[i], VIZ_CURVA));
+
+      /* Movimiento de fondo muy suave para que no parezca muerto en los
+         pasajes tranquilos. Antes era bastante más alto y contribuía a que
+         todo se viera lleno: ahora se nota solo cuando la señal es baja. */
       const floor1 = Math.sin(t * 1.8 + p * 5.1) * 0.5 + 0.5;
       const floor2 = Math.sin(t * 3.2 + p * 8.4) * 0.5 + 0.5;
-      const floor3 = Math.sin(t * 0.9 + p * 3.7) * 0.5 + 0.5;
-      const envelope = 0.18 + 0.10 * Math.sin(p * Math.PI); // más alto en el centro
-      const idle = (floor1 * 0.5 + floor2 * 0.3 + floor3 * 0.2) * envelope;
+      const idle = (floor1 * 0.6 + floor2 * 0.4) * (0.06 + 0.05 * Math.sin(p * Math.PI));
 
-      // El relleno se aplica más cuando la señal real es baja
-      result[i] = Math.min(1, real + idle * Math.max(0, 1 - real * 2));
+      result[i] = Math.min(1, real + idle * Math.max(0, 1 - real * 3));
     }
     return result;
   }
