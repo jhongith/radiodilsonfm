@@ -4107,37 +4107,40 @@ window.initFirebase = function() {
   setTimeout(listenPushSignals, 800);
 };
 
-/* Notif cuando empieza un programa nuevo (cada hora si notificaciones activas) */
+/* Notificación cuando empieza un programa nuevo (cada hora, si el oyente
+   tiene las notificaciones activadas).
+   Usa la MISMA lista de programas que el resto de la aplicación (SCHED):
+   antes tiraba de DJ_SCHEDULE, la lista de nombres inventados. */
 (function scheduleProgNotifs() {
-  const now = new Date();
-  const msToNextHour = (60 - now.getMinutes()) * 60000 - now.getSeconds() * 1000;
+  const ahora = new Date();
+  const msHastaLaProximaHora = (60 - ahora.getMinutes()) * 60000 - ahora.getSeconds() * 1000;
+
+  /* Programa que empieza exactamente a esa hora, o null si no hay ninguno */
+  function programaQueEmpiezaA(hora) {
+    return SCHED.find(p => p.h === hora) || null;
+  }
+
   setTimeout(() => {
     updateDjCard();
-    const h   = new Date().getHours();
-    let idx = DJ_SCHEDULE.length - 1;
-    DJ_SCHEDULE.forEach((s, i) => { if (s.h === h) idx = i; });
-    const prog = DJ_SCHEDULE[idx];
-    if (prog.h === h) { // exactamente empieza en esta hora
+    const prog = programaQueEmpiezaA(new Date().getHours());
+    if (prog) {
       sendPushNotification(
-        `📻 ${prog.avatar} Dilson 101.9 FM`,
-        `¡Empieza ahora: ${prog.program} con ${prog.name}!`,
+        `📻 ${prog.icon || '🎙️'} Dilson 101.9 FM`,
+        `¡Empieza ahora: ${prog.name}!`,
         'dilson-program'
       );
     }
     setInterval(() => {
       updateDjCard();
       const hh = new Date().getHours();
-      const mm = new Date().getMinutes();
-      if (mm === 0) {
-        let i2 = DJ_SCHEDULE.length - 1;
-        DJ_SCHEDULE.forEach((s, i) => { if (s.h === hh) i2 = i; });
-        const p = DJ_SCHEDULE[i2];
-        if (p.h === hh) {
-          sendPushNotification(`📻 ${p.avatar} Dilson 101.9 FM`, `¡Empieza: ${p.program}!`, 'dilson-program');
+      if (new Date().getMinutes() === 0) {
+        const p = programaQueEmpiezaA(hh);
+        if (p) {
+          sendPushNotification(`📻 ${p.icon || '🎙️'} Dilson 101.9 FM`, `¡Empieza: ${p.name}!`, 'dilson-program');
         }
       }
     }, 60000);
-  }, msToNextHour);
+  }, msHastaLaProximaHora);
 })();
 
 
