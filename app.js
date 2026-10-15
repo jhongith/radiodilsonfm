@@ -445,11 +445,15 @@ let vizFreqData  = null;
 let vizConnected = false;
 
 /* ── Ajustes del visualizador (barras y ondas) ──────────────────────
-   Además del rango de decibelios de arriba, cada fotograma se normaliza
-   contra su propio máximo y su propio mínimo. Así el dibujo aprovecha todo
-   su recorrido tanto con el volumen alto como bajo, y no depende de lo
-   fuerte que llegue la señal. */
-const VIZ_CONTRASTE       = 1.25;  // >1 da más contraste: los picos destacan
+   Rango de frecuencias que se reparte entre las barras. Se reparte de
+   forma LOGARÍTMICA, que es como oye el oído, en lugar de por una curva
+   que amontonaba casi todas las barras en la zona aguda (casi vacía) y
+   dejaba los graves aplastados en las primeras.
+   Con 36 barras: 45 Hz, 53, 62, 72... hasta 14 kHz. */
+const FREC_MIN = 45;      // Hz — primera frecuencia que se muestra
+const FREC_MAX = 14000;   // Hz — última
+
+const VIZ_CONTRASTE       = 1.1;   // ligero contraste entre picos y resto
 const VIZ_PUERTA_SILENCIO = 0.35;  // por debajo de esto se considera silencio
 
 /* ── MODO LIGERO (opcional) ──────────────────────────────────────────
@@ -530,12 +534,25 @@ function getFreqBands(n) {
   if (vizConnected && vizAnalyser && playing) {
     vizAnalyser.getByteFrequencyData(vizFreqData);
     const bins = vizFreqData.length;
-    const limite = Math.min(bins - 1, 140); // solo se usan los graves/medios útiles
+
+    /* ── REPARTO DE FRECUENCIAS ENTRE LAS BARRAS ─────────────────────
+       Antes se repartían con la curva Math.pow(p, 0.45) sobre los primeros
+       140 puntos del análisis. A 44,1 kHz eso llega solo hasta ~6 kHz, y
+       dejaba 32 de las 36 barras mirando la zona de 2 a 6 kHz, donde la
+       música casi no tiene energía: esas barras se quedaban planas y por
+       eso parecía que "solo se movía una parte".
+
+       Ahora cada barra cubre una banda repartida de forma LOGARÍTMICA
+       entre 45 Hz y 14 kHz (que es como oye el oído) y su valor es el
+       PROMEDIO de esa banda, no un punto suelto. Así 24 de las 36 barras
+       miran los graves y medios, donde está la música. */
+    const hzPorPunto = (vizAudioCtx.sampleRate / 2) / bins;
+    const limite     = Math.min(bins - 1, Math.ceil(FREC_MAX / hzPorPunto));
 
     /* ── Nivel del fotograma ─────────────────────────────────────────
        Se busca el valor más alto y el más bajo AHORA MISMO y se normaliza
-       contra ellos. Es lo que hace que el dibujo se mueva igual con el
-       volumen alto o bajo, en vez de quedarse pegado arriba. */
+       contra ellos. Es lo que hace que el dibujo aproveche todo su
+       recorrido con el volumen alto o bajo, en vez de quedarse pegado. */
     let maxBin = 0, minBin = 255;
     for (let k = 0; k <= limite; k++) {
       const v = vizFreqData[k];
@@ -546,24 +563,31 @@ function getFreqBands(n) {
 
     /* Puerta de silencio: si no hay señal, las barras bajan solas en lugar
        de amplificar el ruido de fondo. */
-    const fuerza = Math.min(1, (maxBin / 255) / VIZ_PUERTA_SILENCIO);
+    const fuerza  = Math.min(1, (maxBin / 255) / VIZ_PUERTA_SILENCIO);
+    const relacion = FREC_MAX / FREC_MIN;
 
     for (let i = 0; i < n; i++) {
-      const p = i / n;
-      const binIdx = Math.floor(Math.pow(p, 0.45) * limite);
-      const v0 = vizFreqData[Math.max(0, binIdx - 1)] / 255;
-      const v1 = vizFreqData[binIdx] / 255;
-      const v2 = vizFreqData[Math.min(bins - 1, binIdx + 1)] / 255;
-      const crudo255 = (v0 * 0.2 + v1 * 0.6 + v2 * 0.2) * 255;
+      const p  = i / n;
+      const f0 = FREC_MIN * Math.pow(relacion, p);
+      const f1 = FREC_MIN * Math.pow(relacion, (i + 1) / n);
+      let b0 = Math.floor(f0 / hzPorPunto);
+      let b1 = Math.ceil(f1 / hzPorPunto);
+      if (b0 < 0) b0 = 0;
+      if (b1 <= b0) b1 = b0 + 1;
+      if (b1 > limite + 1) b1 = limite + 1;
+
+      /* Promedio de la banda que le toca a esta barra */
+      let suma = 0, cuenta = 0;
+      for (let k = b0; k < b1 && k <= limite; k++) { suma += vizFreqData[k]; cuenta++; }
+      const crudo255 = cuenta ? (suma / cuenta) : 0;
 
       let real = ((crudo255 - minBin) / rango) * fuerza;
       if (real < 0) real = 0;
       else if (real > 1) real = 1;
-      real = Math.pow(real, VIZ_CONTRASTE); // más contraste entre picos y resto
+      real = Math.pow(real, VIZ_CONTRASTE);
 
       /* Movimiento de fondo muy suave para que no parezca muerto en los
-         pasajes tranquilos. Antes era mucho más alto y contribuía a que todo
-         se viera lleno: ahora solo se nota cuando la señal es baja. */
+         pasajes tranquilos; solo se nota cuando la señal es baja. */
       const floor1 = Math.sin(t * 1.8 + p * 5.1) * 0.5 + 0.5;
       const floor2 = Math.sin(t * 3.2 + p * 8.4) * 0.5 + 0.5;
       const idle = (floor1 * 0.6 + floor2 * 0.4) * (0.05 + 0.04 * Math.sin(p * Math.PI));
