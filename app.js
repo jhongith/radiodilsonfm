@@ -452,7 +452,29 @@ let vizConnected = false;
 const VIZ_CONTRASTE       = 1.25;  // >1 da más contraste: los picos destacan
 const VIZ_PUERTA_SILENCIO = 0.35;  // por debajo de esto se considera silencio
 
+/* ── MODO LIGERO (opcional) ──────────────────────────────────────────
+   Abriendo la web con ?visualizador=0, la radio suena SIN pasar por el
+   procesado de audio del navegador y sin dibujar barras ni ondas.
+
+   Sirve para dos cosas:
+     · para teléfonos que no dan abasto (el procesado de audio del
+       visualizador compite con el dibujo en el mismo hilo y puede
+       provocar cortes y chasquidos);
+     · para averiguar de dónde viene un corte: si con ?visualizador=0
+       desaparece, el problema era la carga gráfica; si sigue igual,
+       viene de la propia emisión. */
+const VIZ_ACTIVO = !/[?&]visualizador=0/.test(location.search);
+
 function connectAudioAnalyser() {
+  if (!VIZ_ACTIVO) {
+    /* Sin visualizador: se ocultan los elementos y el audio suena
+       directamente, sin AnalyserNode de por medio. */
+    const barras = document.getElementById('bars');
+    const ondas  = document.getElementById('vizCanvas');
+    if (barras) barras.style.display = 'none';
+    if (ondas)  ondas.style.display  = 'none';
+    return;
+  }
   if (vizConnected) {
     // ✅ FIX: Si ya está conectado pero el contexto está suspendido, reanudarlo
     if (vizAudioCtx && vizAudioCtx.state === 'suspended') {
@@ -580,6 +602,7 @@ let bassEnergy = 0; // energía de graves para el halo
 let frameCount = 0;
 
 function drawCirc(active) {
+  if (!VIZ_ACTIVO) return;
   const W = CANVAS_SIZE, H = CANVAS_SIZE;
   ctx.clearRect(0, 0, W, H);
   if (!active) return;
@@ -766,7 +789,23 @@ for (let i = 0; i < 36; i++) {
   barD.push({ el: b, smooth: 0, peak: 0 });
 }
 
+/* ── BARRAS: animación barata para no cortar el audio ────────────────
+   Antes, en CADA fotograma, se reescribían la altura, el fondo (con un
+   degradado nuevo) y la sombra de hasta 36 elementos. Eso obliga al
+   navegador a recalcular estilos y a repintar 36 nodos 60 veces por
+   segundo; y como el audio se procesa en el mismo hilo, esa carga puede
+   producir cortes y chasquidos (el "rayado" que se oye en algunos
+   teléfonos).
+
+   Ahora:
+     · la altura se aplica con transform (no dispara recálculo de diseño),
+     · el degradado solo se reescribe cuando CAMBIA la paleta,
+     · el brillo se actualiza cada 5 fotogramas en vez de en todos. */
+let _palBarrasAplicada = -1;
+let _frameBarras = 0;
+
 function animBars() {
+  if (!VIZ_ACTIVO) { barTimer = null; return; }
   if (!playing) {
     cancelAnimationFrame(barTimer);
     barTimer = null;
@@ -775,7 +814,11 @@ function animBars() {
   const qCfg   = Q[QUALITY];
   const count  = Math.min(barD.length, qCfg.barCount);
   const freqs  = getFreqBands(count);
-  const pal    = getCurPalette();
+
+  _frameBarras++;
+  const paletaCambiada = (paletteIdx !== _palBarrasAplicada);
+  if (paletaCambiada) _palBarrasAplicada = paletteIdx;
+  const refrescarBrillo = paletaCambiada || (_frameBarras % 5 === 0);
 
   for (let i = 0; i < count; i++) {
     const b      = barD[i];
@@ -783,21 +826,24 @@ function animBars() {
     if (target > b.smooth) b.smooth += (target - b.smooth) * 0.55;
     else                   b.smooth += (target - b.smooth) * 0.10;
 
-    const h = Math.max(3, b.smooth * 44);
-    b.el.style.height = h + 'px';
+    /* Altura por transform: mismo aspecto, sin recálculo de diseño */
+    b.el.style.transform = 'scaleY(' + Math.max(0.07, b.smooth).toFixed(3) + ')';
 
-    if (qCfg.barShadow) {
-      // Color dinámico completo — solo en HIGH
-      const intensity = b.smooth;
-      if (i >= 15 && i <= 20) {
-        b.el.style.background = `linear-gradient(to top, ${PALETTES[paletteIdx].b}, ${PALETTES[paletteIdx].a})`;
-        b.el.style.boxShadow  = `0 0 ${4 + intensity*10}px ${hexToRgba(PALETTES[paletteIdx].a, 0.7)}`;
-      } else {
-        b.el.style.background = `linear-gradient(to top, ${PALETTES[paletteIdx].c}, ${PALETTES[paletteIdx].b})`;
-        b.el.style.boxShadow  = `0 0 ${2 + intensity*6}px ${hexToRgba(PALETTES[paletteIdx].b, 0.5)}`;
+    if (paletaCambiada) {
+      if (qCfg.barShadow) {
+        if (i >= 15 && i <= 20) {
+          b.el.style.background = `linear-gradient(to top, ${PALETTES[paletteIdx].b}, ${PALETTES[paletteIdx].a})`;
+        } else {
+          b.el.style.background = `linear-gradient(to top, ${PALETTES[paletteIdx].c}, ${PALETTES[paletteIdx].b})`;
+        }
       }
-    } else {
-      // Versión ligera — solo color CSS, sin boxShadow dinámico
+    }
+    if (refrescarBrillo && qCfg.barShadow) {
+      const intensity = b.smooth;
+      b.el.style.boxShadow = (i >= 15 && i <= 20)
+        ? `0 0 ${4 + intensity * 10}px ${hexToRgba(PALETTES[paletteIdx].a, 0.7)}`
+        : `0 0 ${2 + intensity * 6}px ${hexToRgba(PALETTES[paletteIdx].b, 0.5)}`;
+    } else if (paletaCambiada && !qCfg.barShadow) {
       b.el.style.boxShadow = 'none';
     }
   }
@@ -805,14 +851,25 @@ function animBars() {
 }
 
 /* ── SCHEDULE / CLOCK ── */
+/* ── PROGRAMACIÓN ────────────────────────────────────────────────────
+   ESTA es la única lista de programas de la aplicación. De aquí salen el
+   rótulo "🎶 AHORA: …", la tarjeta del locutor y la lista de programación.
+
+   Los nombres son los REALES de la emisora; antes esta lista tenía
+   nombres de relleno ("Tarde Juvenil", "Buenos Días Cuevo"...) que solo
+   aparecían aquí, y por eso el rótulo no coincidía con la lista.
+
+   El panel de administración (pestaña Programación) guarda su propia
+   versión en config/schedule y, si existe, sustituye a esta. Comprobado
+   que ahora mismo config/schedule está VACÍO, así que se usa esta. */
 const SCHED = [
-  { h: 6,  name: 'Buenos Días Cuevo',        icon: '🌅' },
-  { h: 9,  name: 'La Mañana con Juan Pablo', icon: '🎙️' },
-  { h: 12, name: 'Noticiero del Medio Día',  icon: '📰' },
-  { h: 15, name: 'Tarde Juvenil',            icon: '🎶' },
-  { h: 18, name: 'Románticas',               icon: '💛' },
-  { h: 21, name: 'Música Clásica',           icon: '🎼' },
-  { h: 0,  name: 'Transmisión Continua',     icon: '🔄' },
+  { h: 6,  name: 'De Mañanita PST',      icon: '🌅' },
+  { h: 9,  name: 'La Cafeteria',          icon: '☕' },
+  { h: 12, name: 'Noticiero SPLENDID',    icon: '📰' },
+  { h: 15, name: 'Cafe con Microfono',    icon: '🎙️' },
+  { h: 18, name: 'Noticiero SPLENDID',    icon: '📻' },
+  { h: 20, name: 'Ritmo y Melodia',       icon: '🎶' },
+  { h: 22, name: 'Transmisión Continua',  icon: '🔄' },
 ];
 function clock() {
   const n = new Date();
@@ -833,6 +890,53 @@ function clock() {
 }
 clock();
 setInterval(clock, 30000);
+
+/* ═══════════════════════════════════════════════════════════════════
+   LA PROGRAMACIÓN SE DIBUJA DESDE UNA SOLA LISTA
+   ═══════════════════════════════════════════════════════════════════
+   Antes había TRES listas de programas que no se hablaban entre sí:
+     1. SCHED (esta, que Firebase puede sobrescribir con config/schedule)
+     2. DJ_SCHEDULE, otra lista escrita a mano para la tarjeta del locutor
+     3. La lista escrita directamente en el HTML
+   Resultado: el rótulo de arriba decía "Tarde Juvenil", la tarjeta del
+   locutor decía "DJ Tarde / Tarde Juvenil" y la lista marcaba
+   "Cafe con Micrófono" como programa en curso. Tres nombres distintos
+   para el mismo momento del día.
+
+   Ahora la lista visible se dibuja desde SCHED, así que el rótulo, la
+   tarjeta del locutor y la lista salen siempre del MISMO dato. */
+const _descSchedPorDefecto = [...document.querySelectorAll('.sched .pdesc')]
+  .map(el => el.textContent.trim());
+
+function _franjaEtiqueta(h) {
+  if (h < 6)  return 'Madrugada';
+  if (h < 12) return 'Mañana';
+  if (h < 18) return 'Tarde';
+  if (h < 22) return 'Noche';
+  return 'Madrugada';
+}
+
+function renderSched() {
+  const cont = document.querySelector('.sched');
+  if (!cont) return;
+  cont.innerHTML = SCHED.map((p, i) => {
+    const hora = String(p.h).padStart(2, '0') + ':00';
+    /* Se conserva la descripción que ya estaba escrita en el HTML (por
+       posición) para no perder ese texto; si algún día llega desde
+       Firebase, esa manda. */
+    const desc = p.desc || _descSchedPorDefecto[i] || '';
+    return '<div class="prog" data-h="' + p.h + '" role="listitem">' +
+             '<div class="ptime">' + hora + '</div>' +
+             '<div class="pinfo">' +
+               '<div class="pname">' + escHtml(p.name) + '</div>' +
+               (desc ? '<div class="pdesc">' + escHtml(desc) + '</div>' : '') +
+             '</div>' +
+             '<div class="pbadge">' + _franjaEtiqueta(p.h) + '</div>' +
+           '</div>';
+  }).join('');
+  clock(); // volver a marcar cuál está en curso
+}
+renderSched();
 
 /* ── SIGNAL ── */
 function updateSig(on) {
@@ -3915,37 +4019,34 @@ function renderSongRanking() {
    Asocia cada programa con nombre, emoji-avatar y una foto opcional.
    Muestra el locutor actual y el siguiente programa con cuenta regresiva.
    ═══════════════════════════════════════════════════════════════════════ */
-const DJ_SCHEDULE = [
-  { h: 6,  name: 'Locutor Mañana',     program: 'Buenos Días Cuevo',       avatar: '🌅', color: '#f5c842' },
-  { h: 9,  name: 'Juan Pablo',         program: 'La Mañana con Juan Pablo', avatar: '🎙️', color: '#00ffcc' },
-  { h: 12, name: 'Locutor Noticias',   program: 'Noticiero del Medio Día', avatar: '📰', color: '#ff6644' },
-  { h: 15, name: 'DJ Tarde',           program: 'Tarde Juvenil',           avatar: '🎶', color: '#ff44cc' },
-  { h: 18, name: 'Locutor Románticas', program: 'Románticas',              avatar: '💛', color: '#ffaa00' },
-  { h: 21, name: 'DJ Noche',           program: 'Música Clásica',          avatar: '🎼', color: '#aaaaff' },
-  { h: 0,  name: 'Sistema Automático', program: 'Transmisión Continua',    avatar: '🔄', color: '#888888' },
-];
-
+/* La tarjeta del locutor usa LA MISMA lista de programas que el resto
+   (SCHED, que viene de config/schedule y se puede editar desde el panel
+   de administración). Antes tenía su propia lista con nombres inventados
+   ("Locutor Mañana", "DJ Tarde", "DJ Noche"...) que no había forma de
+   cambiar desde el panel y que contradecían al rótulo de arriba. */
 function updateDjCard() {
   const h = new Date().getHours();
-  let curIdx = DJ_SCHEDULE.length - 1;
-  DJ_SCHEDULE.forEach((s, i) => {
+  let curIdx = SCHED.length - 1;
+  SCHED.forEach((s, i) => {
     if (s.h === 0) { if (h < 6) curIdx = i; }
     else if (h >= s.h) curIdx = i;
   });
-  const cur  = DJ_SCHEDULE[curIdx];
-  const next = DJ_SCHEDULE[(curIdx + 1) % DJ_SCHEDULE.length];
+  const cur  = SCHED[curIdx];
+  const next = SCHED[(curIdx + 1) % SCHED.length];
 
   const avatarEl  = document.getElementById('djAvatar');
   const nameEl    = document.getElementById('djName');
   const programEl = document.getElementById('djProgram');
   const nextEl    = document.getElementById('djNextName');
-  const card      = document.getElementById('djCard');
 
-  if (avatarEl)  avatarEl.textContent  = cur.avatar;
+  /* El horario se calcula desde la propia lista, así nunca se descuadra */
+  const desde = String(cur.h).padStart(2, '0') + ':00';
+  const hasta = String(next.h).padStart(2, '0') + ':00';
+
+  if (avatarEl)  avatarEl.textContent  = cur.icon || '🎙️';
   if (nameEl)    nameEl.textContent    = cur.name;
-  if (programEl) programEl.textContent = cur.program;
-  if (nextEl)    nextEl.textContent    = `${next.avatar} ${next.name}`;
-  if (card)      card.style.setProperty('--dj-color', cur.color);
+  if (programEl) programEl.textContent = desde + ' – ' + hasta + ' · Dilson 101.9 FM';
+  if (nextEl)    nextEl.textContent    = (next.icon || '') + ' ' + next.name;
 }
 
 updateDjCard();
@@ -5090,7 +5191,10 @@ function loadStreamConfig() {
     if (!arr.length) return;
     SCHED.length = 0;
     arr.forEach(p => SCHED.push({ h: Number(p.h) || 0, name: p.name || '', icon: p.icon || '🎙️' }));
-    clock();
+    /* Se vuelve a dibujar la lista y la tarjeta del locutor para que los
+       tres textos (rótulo, tarjeta y programación) sigan coincidiendo. */
+    renderSched();
+    updateDjCard();
     console.log('[Dilson FM] Programación cargada desde Firebase:', SCHED.length, 'programas');
   });
 }
