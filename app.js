@@ -3854,20 +3854,31 @@ function initSongRanking() {
 function renderSongRanking() {
   const list = document.getElementById('rankingList');
   if (!list) return;
+  const panel = document.getElementById('rankingPanel');
   const sorted = Object.entries(songRankingMap)
     .sort((a, b) => b[1] - a[1])
     .slice(0, 5);
+
+  /* Sin canciones pedidas no se muestra la tarjeta: antes ocupaba sitio con
+     un recuadro que solo decía "sé el primero en pedir". Aparece sola en
+     cuanto hay el primer pedido. */
   if (sorted.length === 0) {
     list.innerHTML = '<div class="ranking-empty">Sé el primero en pedir 🎵</div>';
+    if (panel) panel.style.display = 'none';
     return;
   }
-  const medals = ['🥇','🥈','🥉','4️⃣','5️⃣'];
+  if (panel) panel.style.display = '';
+
+  /* Los tres primeros llevan medalla; del cuarto en adelante un número, que
+     se ve mucho mejor que los emojis 4️⃣ y 5️⃣ (que cambian de forma según
+     el teléfono y descuadran la fila). */
+  const medals = ['🥇', '🥈', '🥉', '4', '5'];
   list.innerHTML = sorted.map(([song, count], i) => `
-    <div class="ranking-item" style="animation-delay:${i*0.06}s">
+    <div class="ranking-item" style="animation-delay:${i * 0.06}s">
       <span class="rank-medal">${medals[i]}</span>
       <div class="rank-info">
-        <div class="rank-song">${escHtml(song.slice(0,32))}${song.length>32?'…':''}</div>
-        <div class="rank-bar-wrap"><div class="rank-bar" style="width:${Math.round((count/sorted[0][1])*100)}%"></div></div>
+        <div class="rank-song">${escHtml(song.slice(0, 32))}${song.length > 32 ? '…' : ''}</div>
+        <div class="rank-bar-wrap"><div class="rank-bar" style="width:${Math.round((count / sorted[0][1]) * 100)}%"></div></div>
       </div>
       <span class="rank-count">${count}×</span>
     </div>`).join('');

@@ -362,18 +362,6 @@
       </div>
     </div>
 
-    <!-- Top de canciones pedidas — FUERA de la tarjeta del reproductor.
-         Antes iba dentro y le robaba espacio a los controles de play/pausa. -->
-    <div class="ranking-panel" id="rankingPanel" role="region" aria-label="Top canciones pedidas">
-      <div class="ranking-header">
-        <span class="ranking-title">🏆 Top Canciones Pedidas</span>
-        <span class="ranking-period" id="rankingPeriod">esta semana</span>
-      </div>
-      <div class="ranking-list" id="rankingList">
-        <div class="ranking-empty">Sé el primero en pedir 🎵</div>
-      </div>
-    </div>
-
     <!-- DJ EN TURNO -->
     <div class="dj-card" id="djCard" role="region" aria-label="Locutor en turno">
       <div class="dj-avatar" id="djAvatar" aria-hidden="true">🎙️</div>
@@ -456,6 +444,20 @@
       </div>
       <div class="vote-total" id="voteTotalLabel">Sé el primero en votar</div>
       <div class="vote-result-msg" id="voteResultMsg"></div>
+    </div>
+
+    <!-- TOP DE CANCIONES PEDIDAS
+         Va aquí, junto a las reacciones y la votación, porque es contenido de
+         participación. Antes estaba pegado a la tarjeta del reproductor y
+         rompía la secuencia reproductor → locutor en turno. -->
+    <div class="ranking-panel" id="rankingPanel" role="region" aria-label="Top canciones pedidas">
+      <div class="ranking-header">
+        <span class="ranking-title">🏆 Top Canciones Pedidas</span>
+        <span class="ranking-period" id="rankingPeriod">esta semana</span>
+      </div>
+      <div class="ranking-list" id="rankingList">
+        <div class="ranking-empty">Sé el primero en pedir 🎵</div>
+      </div>
     </div>
 
     <!-- PROGRAMACIÓN -->
