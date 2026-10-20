@@ -2564,11 +2564,11 @@ function showTapToPlay() {
   ov.setAttribute('aria-label', 'Toca para escuchar Radio Dilson');
   ov.style.cssText = 'position:fixed;inset:0;z-index:8500;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;background:rgba(7,7,15,0.93);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);';
   ov.innerHTML = `
-    <img src="logodilson2.png" style="width:100px;height:100px;border-radius:50%;object-fit:cover;border:2px solid rgba(245,200,66,0.4);box-shadow:0 0 40px rgba(245,200,66,0.35);" onerror="this.style.display='none'" alt="Radio Dilson">
-    <div style="font-family:'Bebas Neue',sans-serif;font-size:2rem;letter-spacing:0.15em;color:#f5c842;text-shadow:0 0 24px rgba(245,200,66,0.6);text-align:center;">DILSON 101.9 FM</div>
-    <div style="font-family:'JetBrains Mono',monospace;font-size:0.58rem;color:rgba(245,200,66,0.45);letter-spacing:0.15em;text-align:center;">CUEVO · BOLIVIA · EN VIVO</div>
-    <button id="tapBtn" aria-label="Reproducir Radio Dilson 101.9 FM" style="margin-top:6px;width:84px;height:84px;border-radius:50%;border:none;background:linear-gradient(135deg,#f5c842,#c9a22a);color:#0a0a12;font-size:2.2rem;cursor:pointer;box-shadow:0 8px 34px rgba(245,200,66,0.55),inset 0 2px 0 rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;">▶</button>
-    <div style="font-family:'JetBrains Mono',monospace;font-size:0.6rem;color:rgba(240,232,208,0.35);letter-spacing:0.12em;">Toca para escuchar</div>
+    <img src="logodilson2.png" style="width:100px;height:100px;border-radius:50%;object-fit:cover;border:2px solid rgba(168,85,247,0.45);box-shadow:0 0 40px rgba(168,85,247,0.4);" onerror="this.style.display='none'" alt="Radio Dilson">
+    <div style="font-family:'Bebas Neue',sans-serif;font-size:2rem;letter-spacing:0.15em;color:#A855F7;text-shadow:0 0 24px rgba(168,85,247,0.65);text-align:center;">DILSON 101.9 FM</div>
+    <div style="font-family:'JetBrains Mono',monospace;font-size:0.58rem;color:rgba(200,160,255,0.55);letter-spacing:0.15em;text-align:center;">CUEVO · BOLIVIA · EN VIVO</div>
+    <button id="tapBtn" aria-label="Reproducir Radio Dilson 101.9 FM" style="margin-top:6px;width:84px;height:84px;border-radius:50%;border:none;background:linear-gradient(135deg,#A855F7,#7C3AED);color:#fff;font-size:2.2rem;cursor:pointer;box-shadow:0 8px 34px rgba(168,85,247,0.55),inset 0 2px 0 rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;">▶</button>
+    <div style="font-family:'JetBrains Mono',monospace;font-size:0.6rem;color:rgba(235,235,245,0.4);letter-spacing:0.12em;">Toca para escuchar</div>
   `;
   ov.querySelector('#tapBtn').addEventListener('click', () => {
     sessionStorage.setItem('dilson_played', '1');
@@ -4998,17 +4998,17 @@ async function shareSongAsImage() {
   }
 
   // ── Línea decorativa ──
-  ctx.strokeStyle = 'rgba(245,200,66,0.5)';
+  ctx.strokeStyle = 'rgba(168,85,247,0.5)';
   ctx.lineWidth = 2;
   ctx.beginPath();
   ctx.moveTo(80, 720); ctx.lineTo(1000, 720);
   ctx.stroke();
 
   // ── Nombre de la radio ──
-  ctx.fillStyle = '#f5c842';
+  ctx.fillStyle = '#A855F7';
   ctx.font = 'bold 44px Arial, sans-serif';
   ctx.textAlign = 'center';
-  ctx.shadowColor = 'rgba(245,200,66,0.4)';
+  ctx.shadowColor = 'rgba(168,85,247,0.4)';
   ctx.shadowBlur  = 20;
   ctx.fillText('📻 Radio Dilson 101.9 FM', 540, 778);
   ctx.shadowBlur = 0;
