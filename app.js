@@ -2863,6 +2863,10 @@ function initFirebase() {
       arrancado = true;
       startListening();
       trackPresence();
+      /* Si el oyente ya había concedido la ubicación, se comparte ahora para
+         que el mapa de oyentes se vaya llenando aunque no abra esa pestaña.
+         Nunca pide permiso: solo usa uno ya concedido. */
+      compartirUbicacionSiYaPermitida();
       listenCurrentSong(); // Sincronizar canción actual con Firebase
       initReactions();     // Nivel 2: reacciones en vivo
       loadStreamConfig();
@@ -5296,43 +5300,102 @@ function _initLeafletMap() {
     maxZoom: 18
   }).addTo(_leafletMap);
 
+  /* ── Estado del mapa ─────────────────────────────────────────────
+     El número de "en línea" sale de la PRESENCIA (chat/presencia), que es
+     la única fuente fiable. Antes se contaban las POSICIONES compartidas,
+     así que el mapa decía "1 en línea" cuando había 4 oyentes conectados. */
+  let presenciaMapa = 0;
+  let conUbicacionMapa = 0;
+
+  function actualizarResumenMapa() {
+    const el = document.getElementById('mapaCount');
+    if (el) el.textContent = presenciaMapa;
+    const hint = document.querySelector('.mapa-hint');
+    if (!hint) return;
+    if (conUbicacionMapa === 0) {
+      hint.textContent = '📍 Ningún oyente ha compartido su ubicación todavía. Activa la tuya para aparecer.';
+    } else {
+      hint.textContent = '📍 ' + conUbicacionMapa +
+        (conUbicacionMapa === 1 ? ' oyente comparte su ubicación' : ' oyentes comparten su ubicación') +
+        ' · activa la tuya para aparecer';
+    }
+  }
+
   /* Escuchar posiciones en Firebase */
   if (fbDB) {
     fbDB.ref('oyentes_pos').on('value', snap => {
       const data = snap.val() || {};
-      const count = Object.keys(data).length;
-      const el = document.getElementById('mapaCount');
-      if (el) el.textContent = count;
 
       /* Limpiar marcadores viejos */
       Object.values(_mapaMarkers).forEach(m => m.remove());
       _mapaMarkers = {};
 
+      conUbicacionMapa = 0;
       Object.entries(data).forEach(([uid, pos]) => {
-        if (!pos.lat || !pos.lng) return;
+        if (!pos || typeof pos.lat !== 'number' || typeof pos.lng !== 'number') return;
+        conUbicacionMapa++;
         const esYo = uid === _uid;
+        const tam   = esYo ? 16 : 11;
+        const color = esYo ? '#A855F7' : '#D8B4FE';
         const icon = L.divIcon({
           className: '',
-          html: `<div style="width:${esYo?14:10}px;height:${esYo?14:10}px;border-radius:50%;background:${esYo?'#f5c842':'#ff4060'};border:2px solid #fff;box-shadow:0 0 ${esYo?10:6}px ${esYo?'rgba(245,200,66,0.8)':'rgba(255,64,96,0.6)'}"></div>`,
-          iconSize: [esYo?14:10, esYo?14:10],
-          iconAnchor: [esYo?7:5, esYo?7:5]
+          html: '<div style="width:' + tam + 'px;height:' + tam + 'px;border-radius:50%;background:' + color +
+                ';border:2px solid #fff;box-shadow:0 0 ' + (esYo ? 10 : 6) + 'px ' + color + '"></div>',
+          iconSize:   [tam, tam],
+          iconAnchor: [tam / 2, tam / 2]
         });
         const marker = L.marker([pos.lat, pos.lng], { icon }).addTo(_leafletMap);
-        if (pos.nombre) marker.bindPopup(`<b>${_esc(pos.nombre)}</b><br><small>${_esc(pos.ciudad||'')}</small>`);
+        if (pos.nombre) marker.bindPopup('<b>' + _esc(pos.nombre) + '</b><br><small>' + _esc(pos.ciudad || '') + '</small>');
         _mapaMarkers[uid] = marker;
       });
+
+      actualizarResumenMapa();
+    });
+
+    /* Presencia: cuántos oyentes hay conectados de verdad */
+    fbDB.ref('chat/presencia').on('value', snap => {
+      presenciaMapa = snap.numChildren();
+      actualizarResumenMapa();
     });
   }
 
-  /* Obtener posición propia */
+  actualizarResumenMapa();
+
+  /* ── Mi ubicación ────────────────────────────────────────────────
+     IMPORTANTE: si no hay una ubicación REAL, no se sube nada.
+
+     Antes, cuando el oyente negaba el permiso, se subía el centro de Cuevo
+     (-20.46, -63.66) por defecto. Eso tenía dos consecuencias graves:
+       · TODOS los que no comparten acababan apilados en el mismo punto,
+         así que el mapa parecía tener una sola persona;
+       · era mentira: mostraba en Cuevo a gente que podía estar en
+         cualquier parte del mundo. */
   if (navigator.geolocation && _geoAccurate) {
     _subirPosicionMapa(_geoLat, _geoLng);
   } else if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(
       pos => _subirPosicionMapa(pos.coords.latitude, pos.coords.longitude),
-      () => _subirPosicionMapa(_geoLat, _geoLng) /* fallback Cuevo */
+      () => { /* denegado o no disponible: no se inventa la ubicación */ }
     );
   }
+}
+
+/* Comparte la ubicación al abrir la app SI el oyente ya la había concedido
+   antes. Nunca pide permiso aquí (eso solo ocurre al entrar al mapa): si ya
+   estaba concedido, la posición se comparte igualmente para que el mapa se
+   vaya llenando con los oyentes que vuelven. */
+function compartirUbicacionSiYaPermitida() {
+  if (!('geolocation' in navigator) || !navigator.permissions) return;
+  navigator.permissions.query({ name: 'geolocation' })
+    .then(perm => {
+      if (perm.state !== 'granted') return;
+      navigator.geolocation.getCurrentPosition(
+        pos => _subirPosicionMapa(pos.coords.latitude, pos.coords.longitude),
+        () => {},
+        { maximumAge: 600000, timeout: 8000 }
+      );
+    })
+    .catch(() => {});
 }
 
 function _subirPosicionMapa(lat, lng) {
