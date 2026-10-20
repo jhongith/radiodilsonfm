@@ -453,7 +453,11 @@ let vizConnected = false;
 const FREC_MIN = 45;      // Hz — primera frecuencia que se muestra
 const FREC_MAX = 14000;   // Hz — última
 
-const VIZ_CONTRASTE       = 1.1;   // ligero contraste entre picos y resto
+/* Sensibilidad del dibujo. Por debajo de 1 realza los valores medios, así
+   las barras y las ondas se ven más altas y con más movimiento; con 1.0 se
+   ven más discretas y por encima de 1.3 casi todo se queda abajo.
+   (Con 0.75 las barras de nivel medio suben alrededor de un 60 %). */
+const VIZ_CONTRASTE       = 0.75;
 const VIZ_PUERTA_SILENCIO = 0.35;  // por debajo de esto se considera silencio
 
 /* ── MODO LIGERO (opcional) ──────────────────────────────────────────
