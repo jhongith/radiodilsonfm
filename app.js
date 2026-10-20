@@ -2807,8 +2807,8 @@ window.goLive = function(on) {
   syncMiniPlayer();
   const logoImg = document.getElementById('logoImg');
   if (logoImg) logoImg.style.filter = on
-    ? 'drop-shadow(0 0 22px rgba(245,200,66,0.7)) drop-shadow(0 0 8px rgba(255,200,0,0.4))'
-    : 'drop-shadow(0 0 14px rgba(245,200,66,0.25))';
+    ? 'drop-shadow(0 0 22px rgba(168,85,247,0.75)) drop-shadow(0 0 8px rgba(216,180,254,0.45))'
+    : 'drop-shadow(0 0 14px rgba(168,85,247,0.3))';
 };
 
 /* ═══════════════════════════════════════════
