@@ -303,40 +303,55 @@ let QUALITY = isLowEnd ? 'LOW' : isMobile ? 'MED' : 'HIGH';
 
 /* Config por nivel de calidad */
 const Q = {
-  HIGH: { nbars: 80, maxOut: 36, maxIn: 10, shadowBlur: true,  shadowMax: 16, particles: true,  particleProb: 0.04, innerRing: true,  barCount: 36, barShadow: true  },
-  MED:  { nbars: 52, maxOut: 30, maxIn: 6,  shadowBlur: true,  shadowMax: 8,  particles: false, particleProb: 0,    innerRing: true,  barCount: 24, barShadow: false },
-  LOW:  { nbars: 32, maxOut: 24, maxIn: 0,  shadowBlur: false, shadowMax: 0,  particles: false, particleProb: 0,    innerRing: false, barCount: 16, barShadow: false },
+  HIGH: { nbars: 80, maxOut: 42, maxIn: 10, shadowBlur: true,  shadowMax: 16, particles: true,  particleProb: 0.04, innerRing: true,  barCount: 36, barShadow: true  },
+  MED:  { nbars: 52, maxOut: 40, maxIn: 6,  shadowBlur: true,  shadowMax: 8,  particles: false, particleProb: 0,    innerRing: true,  barCount: 28, barShadow: false },
+  LOW:  { nbars: 32, maxOut: 36, maxIn: 0,  shadowBlur: false, shadowMax: 0,  particles: false, particleProb: 0,    innerRing: false, barCount: 20, barShadow: false },
 };
 
-/* Medición de FPS real para ajuste dinámico */
-let fpsFrames = 0, fpsStart = 0, fpsChecked = false;
+/* ── Medición de FPS para ajustar la calidad ─────────────────────────
+   Antes se medía UNA sola vez, en los primeros 2 segundos: justo cuando la
+   página y el audio están arrancando, así que salía un valor malo y la
+   calidad se quedaba reducida PARA SIEMPRE (menos barras y más cortas: es
+   el "casi no se mueve" del móvil).
+
+   Ahora se ignora el arranque, se mide en ventanas de 3 s y la calidad
+   puede VOLVER a subir cuando el teléfono va bien. */
+let fpsFrames = 0, fpsArranque = 0, fpsVentana = 0;
+
 function measureFPS(now) {
-  if (fpsChecked) return;
-  if (!fpsStart) { fpsStart = now; return; }
+  if (!fpsArranque) { fpsArranque = now; return; }
+  if (now - fpsArranque < 5000) return;          /* se ignora el arranque */
+  if (!fpsVentana) { fpsVentana = now; fpsFrames = 0; return; }
+
   fpsFrames++;
-  const elapsed = now - fpsStart;
-  if (elapsed >= 2000) { // medir 2 segundos
-    const fps = (fpsFrames / elapsed) * 1000;
-    fpsChecked = true;
-    if (fps < 28 && QUALITY !== 'LOW') {
-      QUALITY = 'LOW';
-      console.info(`[Dilson FM] FPS bajo (${fps.toFixed(0)}fps) → calidad reducida a LOW`);
-    } else if (fps < 45 && QUALITY === 'HIGH') {
-      QUALITY = 'MED';
-      console.info(`[Dilson FM] FPS medio (${fps.toFixed(0)}fps) → calidad reducida a MED`);
-    }
-    /* Ajustar barras del DOM según la calidad detectada */
+  const transcurrido = now - fpsVentana;
+  if (transcurrido < 3000) return;               /* ventana de 3 segundos */
+
+  const fps = (fpsFrames / transcurrido) * 1000;
+  fpsVentana = now;
+  fpsFrames = 0;
+
+  const antes = QUALITY;
+  if (fps < 26)      QUALITY = 'LOW';
+  else if (fps < 42) QUALITY = (QUALITY === 'HIGH') ? 'MED' : QUALITY;
+  else               QUALITY = 'HIGH';
+
+  if (QUALITY !== antes) {
+    console.info('[Dilson FM] ' + fps.toFixed(0) + ' fps → calidad ' + QUALITY);
     syncBarCount();
   }
 }
 
-/* Ajustar cantidad de barras del visualizador horizontal al nivel detectado */
+/* Ajustar la cantidad de barras al nivel de calidad.
+   Ahora también puede AÑADIR: antes solo quitaba, así que al recuperar
+   calidad las barras perdidas no volvían nunca. */
 function syncBarCount() {
-  const target = Q[QUALITY].barCount;
-  while (barD.length > target) {
-    const removed = barD.pop();
-    if (removed.el.parentNode) removed.el.parentNode.removeChild(removed.el);
+  const objetivo = Q[QUALITY].barCount;
+  while (barD.length > objetivo) {
+    const quitada = barD.pop();
+    if (quitada.el.parentNode) quitada.el.parentNode.removeChild(quitada.el);
   }
+  while (barD.length < objetivo && barD.length < 36) agregarBarra();
 }
 
 const NBARS_FULL = 80; // referencia, el valor real lo da Q[QUALITY].nbars
@@ -810,12 +825,19 @@ function animCirc() {
 
 /* ── Barras horizontales PREMIUM ── */
 const barsEl = document.getElementById('bars'), barD = [];
-for (let i = 0; i < 36; i++) {
+
+/* Se crean de una en una para poder quitarlas y volver a ponerlas cuando
+   cambia la calidad (antes se creaban 36 fijas y solo se podían quitar). */
+function agregarBarra() {
+  if (!barsEl || barD.length >= 36) return;
+  const i = barD.length;
   const b = document.createElement('div');
   b.className = 'bar' + (i >= 15 && i <= 20 ? ' center' : '');
+  b.style.transform = 'scaleY(0.07)';
   barsEl.appendChild(b);
   barD.push({ el: b, smooth: 0, peak: 0 });
 }
+for (let i = 0; i < 36; i++) agregarBarra();
 
 /* ── BARRAS: animación barata para no cortar el audio ────────────────
    Antes, en CADA fotograma, se reescribían la altura, el fondo (con un
@@ -831,6 +853,7 @@ for (let i = 0; i < 36; i++) {
      · el brillo se actualiza cada 5 fotogramas en vez de en todos. */
 let _palBarrasAplicada = -1;
 let _frameBarras = 0;
+let _ultimoFrameBarras = 0;
 
 function animBars() {
   if (!VIZ_ACTIVO) { barTimer = null; return; }
@@ -848,11 +871,21 @@ function animBars() {
   if (paletaCambiada) _palBarrasAplicada = paletteIdx;
   const refrescarBrillo = paletaCambiada || (_frameBarras % 5 === 0);
 
+  /* Suavizado por TIEMPO, no por fotograma: así se mueve igual de rápido a
+     30 fps que a 60. Antes se sumaba 0.55 (subida) y 0.10 (bajada) en cada
+     fotograma, de modo que en un móvil lento las barras subían y bajaban
+     con pereza: eso también era parte del "se mueve lento". */
+  const _ahora = performance.now();
+  const _dt = Math.min(0.12, (_ahora - (_ultimoFrameBarras || _ahora)) / 1000) || 0.016;
+  _ultimoFrameBarras = _ahora;
+  const factorSubida = 1 - Math.exp(-_dt * 45);
+  const factorBajada = 1 - Math.exp(-_dt * 6);
+
   for (let i = 0; i < count; i++) {
     const b      = barD[i];
     const target = freqs[i];
-    if (target > b.smooth) b.smooth += (target - b.smooth) * 0.55;
-    else                   b.smooth += (target - b.smooth) * 0.10;
+    if (target > b.smooth) b.smooth += (target - b.smooth) * factorSubida;
+    else                   b.smooth += (target - b.smooth) * factorBajada;
 
     /* Altura por transform: mismo aspecto, sin recálculo de diseño */
     b.el.style.transform = 'scaleY(' + Math.max(0.07, b.smooth).toFixed(3) + ')';
