@@ -16,7 +16,7 @@
    DevTools → Application → Cache Storage → busca 'dilson-fm-vXXX'
    ───────────────────────────────────────────────────────────────────────────  */
 
-const DEPLOY_VERSION = 'dilson-fm-v121';  /* ← SUBIR ESTE NÚMERO EN CADA DEPLOY */
+const DEPLOY_VERSION = 'dilson-fm-v122';  /* ← SUBIR ESTE NÚMERO EN CADA DEPLOY */
 const CACHE_VERSION  = DEPLOY_VERSION;
 
 /* Assets que se pre-cachean al instalar el SW.
@@ -30,14 +30,15 @@ const ASSETS = [
   './app.js',
   './style.css',
   './manifest.json',
-  './icon.png',
-  './icon-512.png',
-  './icon-384.png',
-  './icon-192.png',
-  './icon-180.png',
-  './icon-152.png',
-  './icon-192-maskable.png',
-  './icon-512-maskable.png'
+  './icon-512-v2.png',
+  './icon-384-v2.png',
+  './icon-192-v2.png',
+  './icon-180-v2.png',
+  './icon-152-v2.png',
+  './icon-192-maskable-v2.png',
+  './icon-512-maskable-v2.png',
+  './icon-32-v2.png',
+  './favicon.ico'
 ];
 
 /* Assets que cambian con frecuencia — se revalidan en red antes de servir.
@@ -166,8 +167,8 @@ self.addEventListener('message', e => {
       _showPlaybackNotification({
         title:  e.data.title  || 'Radio Dilson 101.9 FM',
         artist: e.data.artist || 'En Vivo · Cuevo, Bolivia',
-        icon:   e.data.icon   || './icon-192.png',
-        badge:  e.data.badge  || './icon-192.png',
+        icon:   e.data.icon   || './icon-192-v2.png',
+        badge:  e.data.badge  || './icon-192-v2.png',
       });
       break;
 
@@ -192,8 +193,8 @@ async function _showPlaybackNotification({ title, artist, icon, badge }) {
   try {
     await self.registration.showNotification('📻 ' + title, {
       body:               artist,
-      icon:               icon  || './icon-192.png',
-      badge:              badge || './icon-192.png',
+      icon:               icon  || './icon-192-v2.png',
+      badge:              badge || './icon-192-v2.png',
       tag:                PLAYBACK_NOTIF_TAG,
       renotify:           false,
       requireInteraction: true,
@@ -376,8 +377,8 @@ self.addEventListener('push', e => {
   e.waitUntil(
     self.registration.showNotification(notif.title || payload.title || 'Radio Dilson 101.9 FM', {
       body:     notif.body    || payload.body    || '',
-      icon:     notif.icon    || payload.icon    || './icon-192.png',
-      badge:    notif.badge   || payload.badge   || './icon-192.png',
+      icon:     notif.icon    || payload.icon    || './icon-192-v2.png',
+      badge:    notif.badge   || payload.badge   || './icon-192-v2.png',
       image:    notif.image   || payload.image   || undefined,
       tag:      notif.tag     || payload.tag     || 'dilson-notif',
       renotify: true,
