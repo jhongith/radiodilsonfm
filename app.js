@@ -578,11 +578,23 @@ function getFreqBands(n) {
       if (v > maxBin) maxBin = v;
       if (v < minBin) minBin = v;
     }
-    const rango = Math.max(24, maxBin - minBin); // nunca dividir por casi cero
+    /* ── ¿HAY SEÑAL DE VERDAD? ───────────────────────────────────────
+       Si TODAS las bandas valen prácticamente lo mismo (espectro plano:
+       silencio digital o los primeros segundos del arranque), no hay nada
+       que dibujar. Antes se normalizaba contra un mínimo de 24 y eso
+       amplificaba la nada hasta el tope: las barras se llenaban a full y,
+       como dibujar 36 barras y 80 ondas al máximo es lo más caro que hay,
+       el móvil se ponía lento hasta que llegaba el audio real.
+
+       Con la dispersión por debajo de 24 se considera "sin señal" y el
+       dibujo se queda en reposo. */
+    const dispersion = maxBin - minBin;
+    const haySenal   = dispersion >= 24;
+    const rango      = Math.max(24, dispersion);
 
     /* Puerta de silencio: si no hay señal, las barras bajan solas en lugar
        de amplificar el ruido de fondo. */
-    const fuerza  = Math.min(1, (maxBin / 255) / VIZ_PUERTA_SILENCIO);
+    const fuerza  = haySenal ? Math.min(1, (maxBin / 255) / VIZ_PUERTA_SILENCIO) : 0;
     const relacion = FREC_MAX / FREC_MIN;
 
     for (let i = 0; i < n; i++) {
