@@ -36,8 +36,8 @@
    ═══════════════════════════════════════════════════════════════ */
 
 /* ── Servidor de la emisora ── */
-const STREAM_HOST  = 'uk18freenew.listen2myradio.com';
-const STREAM_PORT  = 34784;
+const STREAM_HOST  = 'uk5freenew.listen2myradio.com';
+const STREAM_PORT  = 35440;
 const STREAM_ID    = 1;
 const STREAM_PATH  = '/;stream';   /* la ruta que entrega el audio */
 

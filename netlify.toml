@@ -20,8 +20,8 @@
 # audio por "contenido mixto", porque el origen real es HTTP.
 #
 # Servidor actual: Shoutcast v2 de listen2myradio.
-#   Host   : uk18freenew.listen2myradio.com   (IP 37.157.242.102)
-#   Puerto : 34784
+#   Host   : uk5freenew.listen2myradio.com   (IP 78.129.132.7)
+#   Puerto : 35440
 #   Emisión: 1        Ruta de audio: /;stream   (comprobada, 128 kbps)
 #
 # ⚠️ SI CAMBIA EL SERVIDOR DE RADIO HAY QUE TOCAR DOS SITIOS:
@@ -33,7 +33,7 @@
 #    en el proyecto; ahora son estas dos y deben decir lo mismo.
 [[redirects]]
   from   = "/radio-stream"
-  to     = "http://uk18freenew.listen2myradio.com:34784/;stream"
+  to     = "http://uk5freenew.listen2myradio.com:35440/;stream"
   status = 200
   force  = true
 
